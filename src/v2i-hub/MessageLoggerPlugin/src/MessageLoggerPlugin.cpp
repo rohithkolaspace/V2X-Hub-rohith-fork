@@ -485,7 +485,6 @@ void MessageLoggerPlugin::CheckMSGLogFileSizeAndRename()
  */
 std::string MessageLoggerPlugin::GetCurDateTimeStr()
 {
-	time_t unix_epoch_time = (time_t)0;
 	auto t = std::time(NULL);
 	tm* local_tm = std::localtime(&t);
 	std::ostringstream oss;
