@@ -127,7 +127,7 @@ void MessageLoggerPlugin::HandleBasicSafetyMessage(BsmMessage &msg,
 		routeable_message &routeableMsg) {
 	// check size of the log file and open new one if needed
 	CheckMSGLogFileSizeAndRename();
-	char *BsmOut;
+	char* BsmOut;
 	cJSON *BsmRoot, *BsmMessageContent, *_BsmMessageContent;
 
 	PLOG(logDEBUG)<<"HandleBasicSafetyMessage";
@@ -407,7 +407,6 @@ void MessageLoggerPlugin::HandleBasicSafetyMessage(BsmMessage &msg,
 		_logFileBin.write((const char*)binary_output,sizeof(binary_output));
 		BsmOut = cJSON_Print(BsmRoot);
 		_logFile << BsmOut;
-		free(BsmOut);
 	}
 	catch (J2735Exception &e) {
            FILE_LOG(logERROR) << "Exception caught " << e.what() << std::endl << e.GetBacktrace() << std::endl;
@@ -450,7 +449,7 @@ void MessageLoggerPlugin::OpenMSGLogFile()
     _logFile.open(_curFilename);
     _logFilebin.open(_curFilenamebin, std::ios::out | std::ios::binary | std::ios::app);
 	if (!_logFile.is_open())
-		std::cerr << "Could not open log : " << strerror(errno) <<  std::endl;
+		FILE_LOG(logERROR) << "Could not open log : " << strerror(errno) <<  std::endl;
 	else
 	{
 		_logFile << "Message JSON Logs" << endl;
@@ -469,8 +468,8 @@ void MessageLoggerPlugin::CheckMSGLogFileSizeAndRename()
 		std::lock_guard<mutex> lock(_cfgLock);
 		std::fstream logFilesize(_curFilenamesize);
 		logFilesize.seekg(0, std::ios::end);
-		int _logFilesize = logFilesize.tellg();
-		int curFilesizeInMB = _logFilesize/1048576;
+		long _logFilesize = logFilesize.tellg();
+		long curFilesizeInMB = _logFilesize/1048576;
 		if (curFilesizeInMB >= _maxFilesizeInMB)
 		{
 			_logFile.close();
@@ -486,10 +485,11 @@ void MessageLoggerPlugin::CheckMSGLogFileSizeAndRename()
  */
 std::string MessageLoggerPlugin::GetCurDateTimeStr()
 {
-	auto t = std::time(nullptr);
-	auto tm = *std::localtime(&t);
+	time_t unix_epoch_time = (time_t)0;
+	auto t = std::time(NULL);
+	tm* local_tm = std::localtime(&t);
 	std::ostringstream oss;
-	oss << std::put_time(&tm, "%d%m%Y%H%M%S");
+	oss << std::put_time(local_tm, "%d%m%Y%H%M%S");
 	auto str = oss.str();
 	return str;
 }
