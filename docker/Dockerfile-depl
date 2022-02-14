@@ -2,19 +2,6 @@ FROM ubuntu:20.04
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y cmake git build-essential libgtest-dev libssl-dev qtbase5-dev \
     zip libmysqlcppconn-dev libboost-all-dev libmysqlclient-dev uuid-dev libxerces-c-dev qtbase5-dev \
     libcurl4-openssl-dev libgps-dev libsnmp-dev librdkafka-dev libjsoncpp-dev libev-dev libuv1-dev libcpprest-dev
-# Build and install GTest 
-WORKDIR cd /usr/src/googletest/googletest
-RUN mkdir ~/build
-WORKDIR /usr/src/googletest/googletest/build
-RUN cmake ..
-RUN make
-RUN cp libgtest* /usr/lib/
-WORKDIR cd /usr/src/googletest/googletest
-RUN rm -rf build
-RUN mkdir /usr/local/lib/googletest
-RUN ln -s /usr/lib/libgtest.a /usr/local/lib/googletest/libgtest.a
-RUN ln -s /usr/lib/libgtest_main.a /usr/local/lib/googletest/libgtest_main.a
-RUN ldconfig
 
 # Build and install tmx
 RUN mkdir ~/V2X-Hub
