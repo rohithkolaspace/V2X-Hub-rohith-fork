@@ -1,4 +1,4 @@
-FROM ubuntu:bionic-20190807 AS install_dependencies
+FROM ubuntu:20.04 
 
 RUN apt-get update  && apt-get install -y cmake git build-essential libgtest-dev libssl-dev qtbase5-dev \
     zip libmysqlcppconn-dev libboost1.65-all-dev libmysqlclient-dev uuid-dev libxerces-c-dev qtbase5-dev \
