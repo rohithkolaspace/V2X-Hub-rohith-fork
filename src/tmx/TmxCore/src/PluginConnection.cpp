@@ -317,6 +317,7 @@ void PluginConnection::processRegistrationMessage(IvpMessage *msg)
 			if (manifest->name) info.pluginInfo.name = string(manifest->name);
 			if (manifest->description) info.pluginInfo.description = string(manifest->description);
 			if (manifest->version) info.pluginInfo.version = string(manifest->version);
+			LOG_ERROR("in PluginConnection::processRegistrationMessage with name: " << string(manifest->name));
 
 			{
 				int arraySize = ivpConfig_getItemCount(manifest->configuration);

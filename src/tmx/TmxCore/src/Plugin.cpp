@@ -58,6 +58,8 @@ Plugin::~Plugin()
 
 void Plugin::registerPlugin(RegistrationInformation info)
 {
+	LOG_ERROR("In Plugin::registerPlugin attempting to register plugin with name: " << info.pluginInfo.name << " and id: " << info.pluginInfo.id);
+	
 	if (info.pluginInfo.name.empty())
 	{
 		LOG_ERROR("EMPTY NAME: A plugin attempted to register with an empty name field");
@@ -66,6 +68,12 @@ void Plugin::registerPlugin(RegistrationInformation info)
 
 	bool isUniqueName = false;
 	pthread_mutex_lock(&clientLock);
+
+	std::ostringstream stream;
+	std::copy(clientNames.begin(), clientNames.end(), std::ostream_iterator<std::string>(stream, ","));
+	std::string result = stream.str();
+	LOG_ERROR("In Plugin::registerPlugin clientNames list: " << result);
+
 	if (clientNames.find(info.pluginInfo.name) == clientNames.end())
 	{
 		isUniqueName = true;
