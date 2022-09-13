@@ -340,40 +340,55 @@ bool MapPlugin::LoadMapFiles()
 					}
 					else if (inType == "TXT")
 					{
-						byte_stream bytes;
-						ifstream in(fn);
-						in >> bytes;
+						try {
+							if ( boost::filesystem::exists(fn)) {
+								byte_stream bytes;
+								ifstream in(fn);
+								in >> bytes;
 
-						PLOG(logINFO) << fn << " MAP encoded bytes are " << bytes;
+								PLOG(logDEBUG) << fn << " MAP encoded bytes are " << bytes;
 
-						MapDataMessage *mapMsg = MapDataEncodedMessage::decode_j2735_message<codec::uper<MapDataMessage> >(bytes);
-						if (mapMsg) {
-							PLOG(logDEBUG) << "Map is " << *mapMsg;
+								MapDataMessage *mapMsg = MapDataEncodedMessage::decode_j2735_message<codec::uper<MapDataMessage> >(bytes);
+								if (mapMsg) {
+									PLOG(logDEBUG) << "Map is " << *mapMsg;
 
-							MapDataEncodedMessage mapEnc;
-							mapEnc.encode_j2735_message(*mapMsg);
-							mapFile.set_Bytes(mapEnc.get_payload_str());
+									MapDataEncodedMessage mapEnc;
+									mapEnc.encode_j2735_message(*mapMsg);
+									mapFile.set_Bytes(mapEnc.get_payload_str());
 
-							PLOG(logINFO) << fn << " J2735 message bytes encoded as " << mapFile.get_Bytes();
+									PLOG(logDEBUG) << fn << " J2735 message bytes encoded as " << mapFile.get_Bytes();
+								}
+							}
+							else {
+								PLOG(logERROR) << "File " << fn << " does not exist!" << std::endl;
+							}							
+					}
+						catch( const boost::exception ) {
+							PLOG(logERROR) << "Exception Encountered : \n" << e.what();
 						}
+						
 					}
 					else if (inType == "UPER")
 					{
 						PLOG(logDEBUG) << "Reading MAP file as UPER encoded hex bytes including MessageFrame." << std::endl;
 						boost::filesystem::ifstream in;
-						in.exceptions(ifstream::badbit); 
 						try {
-							in.open(fn );
-							in.seekg(0, std::ios::end);
-							int fileSize = in.tellg();
-							in.seekg(0, std::ios::beg);
-							PLOG(logDEBUG) << "File size is " << fileSize <<std::endl;
-							std::string bytes_string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-							PLOG(logDEBUG) << "File contents : " << bytes_string << std::endl;
-							mapFile.set_Bytes(bytes_string);
-							in.close()								
+							if ( boost::filesystem::exists(fn)) {
+								in.open(fn);
+								in.seekg(0, std::ios::end);
+								int fileSize = in.tellg();
+								in.seekg(0, std::ios::beg);
+								PLOG(logDEBUG) << "File size is " << fileSize <<std::endl;
+								std::string bytes_string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+								PLOG(logDEBUG) << "File contents : " << bytes_string << std::endl;
+								mapFile.set_Bytes(bytes_string);
+								in.close();	
+							}
+							else {
+								PLOG(logERROR) << "File " << fn << " does not exist!" << std::endl;
+							}							
 						}
-						catch( const ios_base::failure &e) {
+						catch( const boost::exception ) {
 							PLOG(logERROR) << "Exception Encountered : \n" << e.what();
 						}
 					}
