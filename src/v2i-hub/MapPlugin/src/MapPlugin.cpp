@@ -18,6 +18,7 @@
 #include <tmx/messages/IvpSignalControllerStatus.h>
 #include <tmx/messages/IvpJ2735.h>
 #include <tmx/j2735_messages/J2735MessageFactory.hpp>
+#include <boost/filesystem.hpp>
 #include "XmlMapParser.h"
 #include "ConvertToJ2735r41.h"
 #include "inputs/isd/ISDToJ2735r41.h"
@@ -359,21 +360,18 @@ bool MapPlugin::LoadMapFiles()
 					else if (inType == "UPER")
 					{
 						PLOG(logDEBUG) << "Reading MAP file as UPER encoded hex bytes including MessageFrame." << std::endl;
-						std::ifstream in; 
+						boost::filesystem::ifstream in;
+						in.exceptions(ifstream::badbit); 
 						try {
-							in.open(fn, std::ios::in | std::ios::binary );
-							if (in.is_open()) {
-								in.seekg(0, std::ios::end);
-								int fileSize = in.tellg();
-								in.seekg(0, std::ios::beg);
-								PLOG(logDEBUG) << "File size is " << fileSize <<std::endl;
-								std::string bytes_string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-								PLOG(logDEBUG) << "File contents : " << bytes_string << std::endl;
-								mapFile.set_Bytes(bytes_string);								
-							}
-							else {
-								PLOG(logERROR) << "Failed to open file " << fn << "." << std::endl;
-							}
+							in.open(fn );
+							in.seekg(0, std::ios::end);
+							int fileSize = in.tellg();
+							in.seekg(0, std::ios::beg);
+							PLOG(logDEBUG) << "File size is " << fileSize <<std::endl;
+							std::string bytes_string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+							PLOG(logDEBUG) << "File contents : " << bytes_string << std::endl;
+							mapFile.set_Bytes(bytes_string);
+							in.close()								
 						}
 						catch( const ios_base::failure &e) {
 							PLOG(logERROR) << "Exception Encountered : \n" << e.what();
