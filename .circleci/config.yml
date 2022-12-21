@@ -106,9 +106,11 @@ jobs:
      - checkout
      - run: 
         name: Docker BuildX Setup
+        # See https://github.com/docker/buildx/issues/495 for where these commands came from
         command: |
-          docker context create buildx-build
-          docker buildx create --use buildx-build
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+          docker buildx create --name multiarch --driver docker-container --use
+          docker buildx inspect --bootstrap
      - run: 
         name: Docker Build V2XHUB
         command: |
