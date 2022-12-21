@@ -99,7 +99,7 @@ jobs:
             fi 
   docker_build_push:
     docker:
-      image: cimg/base:stable
+      - image: cimg/base:stable
     steps:
      - setup_remote_docker:
         version: 20.10.11
