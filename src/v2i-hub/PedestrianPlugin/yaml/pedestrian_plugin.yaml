@@ -1,0 +1,259 @@
+openapi: 3.0.1
+info:
+  version: 1.2.0
+  title: Pedestrian Plugin API
+servers:
+  - url: http://localhost:9000/pedestrian_plugin/
+paths:
+  /sendXML:
+    post:  
+      requestBody:
+          description: The PSM XML to post 
+          required: true
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/psm"
+              example: '<MessageFrame>
+                  <messageId>32</messageId>
+                  <value>
+                    <PersonalSafetyMessage>
+                      <basicType><aPEDESTRIAN/></basicType>
+                      <secMark>%d</secMark>
+                      <msgCnt>%d</msgCnt>
+                      <id>5748c57a</id>
+                      <position>
+                        <lat>340758260</lat>
+                        <long>-842738759</long>
+                      </position>
+                      <accuracy>
+                        <semiMajor>4</semiMajor>
+                        <semiMinor>4</semiMinor>
+                        <orientation>65535</orientation>
+                      </accuracy>
+                      <speed>20</speed>
+                      <heading>2697</heading>
+                      <pathPrediction>
+                        <radiusOfCurve>32767</radiusOfCurve>
+                        <confidence>100</confidence>
+                      </pathPrediction>
+                    </PersonalSafetyMessage>
+                  </value>
+                </MessageFrame>'
+      responses:
+          '200':
+              description: Successfully sent PSM to server
+        
+          '400':
+            description: Error in PSM payload sent
+            
+                    
+components:
+  schemas:
+    psm:
+      type: object
+      properties:
+        psm_info:
+          $ref: "#/components/schemas/psm_info"
+      required:
+        - psm_info
+        
+    psm_info:
+      description: The entire PSM message including message identifier
+      type: object
+      properties:
+        message_frame:
+          $ref: "#/components/schemas/message_frame"
+      required:
+        - message_frame
+
+    message_frame:
+        description: The message frame
+        type: object
+        properties:
+          messageId:
+              type: number
+              description: Identifier equal to 32 for PSM
+          messageValue:
+            $ref: "#/components/schemas/message_value"
+        required:
+            - messageId
+            - messageValue 
+            
+    message_value:
+      description: PSM payload
+      type: object
+      properties:
+        all_vals: 
+          $ref: "#/components/schemas/all_vals"
+      required:
+          - all_vals
+          
+    all_vals:
+        type: object 
+        properties:
+            basicType:
+                type: number
+                description: Enumeration describing the type of pedestrian or non-vehicular road user
+            secMark:
+                type: number
+                description: Current milliseconds within the minute
+                minimum: 0
+                maximum: 65535
+            msgCnt:
+                type: number
+                description: Sequence number
+                minimum: 0
+                maximum: 127
+            id:
+                type: string
+                description: four octet random device identifier
+            position:
+                type: object
+                properties:
+                    lat:
+                        type: number
+                        description: Latitude of the road user 
+                        minimum: -900000000
+                        maximum: 900000001
+                    lon:
+                        type: number
+                        description: Longitude of the road user 
+                        minimum: -1799999999
+                        maximum: 1800000001
+                    elevation:
+                        type: number
+                        description: Elevation of the road user, in units of 10cm above or below the ref ellipsoid
+                        minimum: -4096
+                        maximum: 61439
+                required:
+                    - lat
+                    - lon                
+            accuracy:
+                type: object
+                properties:
+                    semiMajor:
+                        type: number
+                        description: Accuracy along the semi-major axis 
+                        minimum: 0
+                        maximum: 255            
+                    semiMinor:
+                        type: number
+                        description: Accuracy along the semi-minor axis 
+                        minimum: 0
+                        maximum: 255
+                    orientation:
+                        type: number
+                        description: Orientation of semi-major axis 
+                        minimum: 0
+                        maximum: 65535
+                required:
+                    - semiMajor
+                    - semiMinor
+                    - orientation 
+                    
+            speed:
+                type: number
+                description: Velocity of the road user in units of 0.02 m/s
+                minimum: 0
+                maximum: 8191                    
+            heading:
+                type: number
+                description: Heading of the road user in units of 0.0125 deg from North
+                minimum: 0
+                maximum: 28800
+            accelSet:
+                type: object 
+                properties:
+                    long:
+                        type: number 
+                        description: Longitudinal acceleration of road user, in units of 0.01 m/s^2 
+                        minimum: -2000
+                        maximum: 2001
+                    lat:
+                        type: number 
+                        description: Lateral acceleration of road user, in units of 0.01 m/s^2 
+                        minimum: -2000
+                        maximum: 2001
+                    vert:
+                        type: number 
+                        description: Vertical acceleration of road user, in units of 0.02 G 
+                        minimum: -127
+                        maximum: 127
+                    yaw:
+                        type: number 
+                        description: Yaw rate of road user, in units of 0.01 deg/s 
+                        minimum: -32767
+                        maximum: 32767
+                required:
+                    - radiusOfCurve
+                    - confidence 
+            pathPrediction:
+                type: object 
+                properties:
+                    radiusOfCurve:
+                        type: number 
+                        description: Current estimate of trajectory of road user, in units of 10cm 
+                        minimum: -32767
+                        maximum: 32767
+                    confidence:
+                        type: number 
+                        description: Represents general confidence of radiusOfCurve value, in units of 0.5 percent 
+                        minimum: 0
+                        maximum: 200
+                required:
+                    - radiusOfCurve
+                    - confidence     
+            useState:
+                type: string
+                description: Road user device usage state
+            crossRequest:
+                type: boolean
+                description: Road user's intent to cross the street
+            crossState:
+                type: boolean
+                description: Whether a road user is currently crossing a street
+            clusterSize:
+                type: number 
+                description: Number of road users crossing the intersection or roadway
+            clusterRadius:
+                type: number
+                description: Radius of road user cluster, in meters
+                minimum: 0
+                maximum: 100
+            eventResponderType:
+                type: string
+                description: Type of public safety worker responding to event
+            activityType:
+                type: string
+                description: Type of activity a worker or workers are engaged in
+            activitySubType:
+                type: string
+                description: Sub-type of activity a worker or workers are engaged in
+            assistType:
+                type: string
+                description: Special need of the road user associated with the message 
+            sizing:
+                type: string
+                description: Overall stature/behavior of the road user
+            attachment:
+                type: string
+                description: Potential attachment to the road user
+            attachmentRadius:
+                type: number
+                description: Radius of the attachment to the road user, in units of 1 decimeter
+                minimum: 0
+                maximum: 200
+            animalType:
+                type: string
+                description: Describe the animal type
+        required:
+            - basicType
+            - secMark 
+            - msgCnt 
+            - id
+            - position 
+            - accuracy 
+            - speed 
+            - heading 
+            

@@ -4,14 +4,13 @@ SET (TMX_PLUGIN_NAME "Pedestrian")
 add_compile_options(-fPIC)
 FIND_PACKAGE (XercesC REQUIRED)
 FIND_PACKAGE (NetSNMP REQUIRED)
-#FIND_PACKAGE (QHttpEngine REQUIRED)
 
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network REQUIRED)
 
-#set(qserverPedestrian_DIR "/usr/local/share/qserverPedestrian/cmake")
 find_package(qserverPedestrian REQUIRED)
+find_package(pedestrian_plugin_server_api_lib REQUIRED)
 
 include_directories(${Qt5Widgets_INCLUDE_DIRS}) 
 
@@ -34,7 +33,7 @@ BuildTmxPlugin ()
 
 TARGET_INCLUDE_DIRECTORIES ( ${PROJECT_NAME} PUBLIC ${XercesC_INCLUDE_DIRS} ${NETSNMP_INCLUDE_DIRS} ${Qt5Core_INCLUDE_DIRS} ${Qt5Network_INCLUDE_DIRS})
 
-TARGET_LINK_LIBRARIES ( ${PROJECT_NAME} PUBLIC tmxutils ${XercesC_LIBRARY} ${NETSNMP_LIBRARIES} ${QHttpEngine_LIBRARY} Qt5Widgets Qt5Core Qt5Network ssl crypto qhttpengine qserverPedestrian) 
+TARGET_LINK_LIBRARIES ( ${PROJECT_NAME} PUBLIC tmxutils ${XercesC_LIBRARY} ${NETSNMP_LIBRARIES} ${QHttpEngine_LIBRARY} Qt5Widgets Qt5Core Qt5Network ssl crypto qhttpengine qserverPedestrian pedestrian_plugin_server_api_lib) 
 
 
 link_directories(${CMAKE_PREFIX_PATH}/lib)
@@ -52,3 +51,4 @@ set(runPedestrianTests_sources
 add_executable(runPedestrianTests ${runPedestrianTests_sources})
 
 target_link_libraries(runPedestrianTests ${GTEST_LIBRARIES} pthread ${QHttpEngine_LIBRARY} Qt5::Widgets Qt5Core Qt5Network ssl crypto qhttpengine)
+

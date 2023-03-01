@@ -53,3 +53,10 @@ cmake .
 make
 make install
 popd
+
+#open api implementation
+pushd openapi/pedestrian_plugin_api
+cmake .
+make
+make install
+popd

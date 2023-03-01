@@ -45,6 +45,8 @@
 #include <qserverPedestrian/OAIPSM.h>
 #include <queue>
 
+#include <pedestrian_plugin_server_api_lib/OAIApiRouter.h>
+#include <pedestrian_plugin_server_api_lib/OAIDefaultApiHandler.h>
 
 using namespace std;
 using namespace tmx;
