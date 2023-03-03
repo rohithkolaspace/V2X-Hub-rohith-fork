@@ -8,7 +8,6 @@
 
 #include "include/PedestrianPlugin.hpp"
 
-
 namespace PedestrianPlugin
 {
 
@@ -28,28 +27,6 @@ PedestrianPlugin::PedestrianPlugin(string name): PluginClient(name)
 
 	// Subscribe to all messages specified by the filters above.
 	SubscribeToMessages();
-}
-
-void PedestrianPlugin::PedestrianRequestHandler(QHttpEngine::Socket *socket)
-{
-	auto router = QSharedPointer<OpenAPI::OAIApiRouter>::create();
-	QString st; 
-	while(socket->bytesAvailable()>0)
-	{	
-		st.append(socket->readAll());
-	}
-	QByteArray array = st.toLocal8Bit();
-
-	char* psmMsgdef = array.data();	
-	// Catch parse exceptions
-    try {
-	    BroadcastPsm(psmMsgdef);
-		writeResponse(QHttpEngine::Socket::Created, socket);
-	}
-	catch(const J2735Exception &e) {
-        PLOG(logERROR) << "Error parsing file: " << e.what() << std::endl;
-		writeResponse(QHttpEngine::Socket::BadRequest, socket);
-	}
 }
 
 int PedestrianPlugin::StartWebSocket()
@@ -112,29 +89,58 @@ int PedestrianPlugin::StartWebService()
  	QHostAddress address = QHostAddress(QString::fromStdString (webip));
     quint16 port = static_cast<quint16>(webport);
 
+    QSharedPointer<OpenAPI::OAIApiRequestHandler> handler(new OpenAPI::OAIApiRequestHandler());
 
-	QSharedPointer<OpenAPI::OAIApiRequestHandler> handler(new OpenAPI::OAIApiRequestHandler());
-	handler = QSharedPointer<OpenAPI::OAIApiRequestHandler> (new OpenAPI::OAIApiRequestHandler());
+	auto router = QSharedPointer<PedestrianPluginAPI::PedestrianPluginRouter>::create();
 
-    QObject::connect(handler.data(), &OpenAPI::OAIApiRequestHandler::requestReceived, [&](QHttpEngine::Socket *socket) {
+    router->setUpRoutes();
+	
+	QObject::connect(handler.data(), &OpenAPI::OAIApiRequestHandler::requestReceived, [&](QHttpEngine::Socket *socket) {
+        router->processRequest(socket);
 
-		this->PedestrianRequestHandler(socket);
+		std::string psmStr = router->getPsm();
+		char* char_arr = &psmStr[0];
+
+		// Catch parse exceptions
+		try {
+			BroadcastPsm(char_arr);
+			writeResponse(QHttpEngine::Socket::Created, socket);
+		}
+		catch(const J2735Exception &e) {
+			PLOG(logERROR) << "Error parsing file: " << e.what() << std::endl;
+			writeResponse(QHttpEngine::Socket::BadRequest, socket);
+		}
     });
 
     QHttpEngine::Server server(handler.data());
-
-    if (!server.listen(address, port)) {
+    
+	if (!server.listen(address, port)) {
         qCritical("Unable to listen on the specified port.");
         return 1;
     }
 	return a.exec();
-
 }
 
-PedestrianPlugin::~PedestrianPlugin()
+void PedestrianPlugin::PedestrianRequestHandler(QHttpEngine::Socket *socket)
 {
-	if (_signSimClient != NULL)
-		delete _signSimClient;
+	auto router = QSharedPointer<OpenAPI::OAIApiRouter>::create();
+	QString st; 
+	while(socket->bytesAvailable()>0)
+	{	
+		st.append(socket->readAll());
+	}
+	QByteArray array = st.toLocal8Bit();
+
+	char* psmMsgdef = array.data();	
+	// Catch parse exceptions
+    try {
+	    BroadcastPsm(psmMsgdef);
+		writeResponse(QHttpEngine::Socket::Created, socket);
+	}
+	catch(const J2735Exception &e) {
+        PLOG(logERROR) << "Error parsing file: " << e.what() << std::endl;
+		writeResponse(QHttpEngine::Socket::BadRequest, socket);
+	}
 }
 
 void PedestrianPlugin::UpdateConfigSettings()
@@ -275,6 +281,12 @@ void PedestrianPlugin::writeResponse(int responseCode , QHttpEngine::Socket *soc
         socket->close();
     }
 
+}
+
+PedestrianPlugin::~PedestrianPlugin()
+{
+	if (_signSimClient != NULL)
+		delete _signSimClient;
 }
 
 

@@ -5,6 +5,12 @@
 // Copyright   : Copyright (c) 2019 FHWA Saxton Transportation Operations Laboratory. All rights reserved.
 // Description : Pedestrian Plugin
 //==========================================================================
+#pragma once
+#include "PedestrianPluginWorker.hpp"
+#include "FLIRWebSockAsyncClnSession.hpp"
+#include "PedestrianPluginHandler.hpp"
+#include "PedestrianPluginRouter.hpp"
+
 #include <string.h>
 
 #include "PluginClient.h"
@@ -22,10 +28,6 @@
 
 #include <UdpClient.h>
 #include <tmx/messages/auto_message.hpp>
-#include "PedestrianPluginWorker.hpp"
-
-#include "FLIRWebSockAsyncClnSession.hpp"
-
 
 #include <QCommandLineOption>
 #include <QCommandLineParser>
@@ -41,12 +43,8 @@
 #include <unistd.h>
 #endif
 #include <qhttpengine/server.h>
-#include <qserverPedestrian/OAIApiRouter.h>
-#include <qserverPedestrian/OAIPSM.h>
 #include <queue>
 
-#include <pedestrian_plugin_server_api_lib/OAIApiRouter.h>
-#include <pedestrian_plugin_server_api_lib/OAIDefaultApiHandler.h>
 
 using namespace std;
 using namespace tmx;
@@ -110,4 +108,3 @@ private:
 std::mutex _cfgLock;
 
 };
-
