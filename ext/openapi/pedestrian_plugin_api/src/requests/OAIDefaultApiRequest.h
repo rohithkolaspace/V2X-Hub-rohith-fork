@@ -33,13 +33,13 @@ public:
     OAIDefaultApiRequest(QHttpEngine::Socket *s, QSharedPointer<OAIDefaultApiHandler> handler);
     virtual ~OAIDefaultApiRequest();
 
-    void sendXMLPostRequest();
+    void psmPostRequest();
     
 
-    void sendXMLPostResponse();
+    void psmPostResponse();
     
 
-    void sendXMLPostError(QNetworkReply::NetworkError error_type, QString& error_str);
+    void psmPostError(QNetworkReply::NetworkError error_type, QString& error_str);
     
 
     void sendCustomResponse(QByteArray & res, QNetworkReply::NetworkError error_type);
@@ -53,7 +53,7 @@ public:
     void setResponseHeaders(const QMultiMap<QString,QString>& headers);
 
 signals:
-    void sendXMLPost(OAIPsm oai_psm);
+    void psmPost(OAIPsm oai_psm);
     
 
 private:

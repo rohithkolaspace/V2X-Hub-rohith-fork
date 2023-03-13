@@ -23,6 +23,8 @@ PedestrianPluginRouter::PedestrianPluginRouter() : OpenAPI::OAIApiRouter()
 	if (handler != nullptr)
 	{
 		setOAIDefaultApiHandler(handler);
+		std::cout << "In pedestrian plugin API router, set default api handler" << std::endl;
+
 	}
 }
 

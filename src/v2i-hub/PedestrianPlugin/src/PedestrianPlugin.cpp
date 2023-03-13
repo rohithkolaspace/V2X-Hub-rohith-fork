@@ -27,6 +27,11 @@ PedestrianPlugin::PedestrianPlugin(string name): PluginClient(name)
 
 	// Subscribe to all messages specified by the filters above.
 	SubscribeToMessages();
+
+	std::lock_guard<mutex> lock(_cfgLock); 
+	GetConfigValue<string>("DataProvider",dataprovider);
+	lastDataProvider = dataprovider;
+	PLOG(logDEBUG) << "In constructor, last data provider: " << lastDataProvider.c_str() << std::endl;
 }
 
 int PedestrianPlugin::StartWebSocket()
@@ -96,51 +101,37 @@ int PedestrianPlugin::StartWebService()
     router->setUpRoutes();
 	
 	QObject::connect(handler.data(), &OpenAPI::OAIApiRequestHandler::requestReceived, [&](QHttpEngine::Socket *socket) {
+		// QString st; 
+		// while(socket->bytesAvailable()>0)
+		// {	
+		// 	st.append(socket->readAll());
+		// }
+		// QByteArray array = st.toLocal8Bit();
+		// char* psmMsgdef = array.data();	
+	    // BroadcastPsm(psmMsgdef);
         router->processRequest(socket);
 
 		std::string psmStr = router->getPsm();
+		PLOG(logDEBUG) << "Ped plugin received PSM: " << psmStr.c_str() << std::endl;
+
 		char* char_arr = &psmStr[0];
 
-		// Catch parse exceptions
 		try {
 			BroadcastPsm(char_arr);
-			writeResponse(QHttpEngine::Socket::Created, socket);
 		}
 		catch(const J2735Exception &e) {
 			PLOG(logERROR) << "Error parsing file: " << e.what() << std::endl;
-			writeResponse(QHttpEngine::Socket::BadRequest, socket);
 		}
     });
 
     QHttpEngine::Server server(handler.data());
-    
+    qDebug() << "Serving on " << address.toString() << ":" << port;
+
 	if (!server.listen(address, port)) {
         qCritical("Unable to listen on the specified port.");
         return 1;
     }
 	return a.exec();
-}
-
-void PedestrianPlugin::PedestrianRequestHandler(QHttpEngine::Socket *socket)
-{
-	auto router = QSharedPointer<OpenAPI::OAIApiRouter>::create();
-	QString st; 
-	while(socket->bytesAvailable()>0)
-	{	
-		st.append(socket->readAll());
-	}
-	QByteArray array = st.toLocal8Bit();
-
-	char* psmMsgdef = array.data();	
-	// Catch parse exceptions
-    try {
-	    BroadcastPsm(psmMsgdef);
-		writeResponse(QHttpEngine::Socket::Created, socket);
-	}
-	catch(const J2735Exception &e) {
-        PLOG(logERROR) << "Error parsing file: " << e.what() << std::endl;
-		writeResponse(QHttpEngine::Socket::BadRequest, socket);
-	}
 }
 
 void PedestrianPlugin::UpdateConfigSettings()
@@ -161,36 +152,46 @@ void PedestrianPlugin::UpdateConfigSettings()
 	GetConfigValue<float>("FLIRCameraRotation",cameraRotation);
 	GetConfigValue<string>("HostString",hostString);
 
-	PLOG(logDEBUG) << "Pedestrian data provider: "<< dataprovider.c_str() << std::endl;
-	PLOG(logDEBUG) << "Before creating websocket to: " << webSocketIP.c_str() <<  " on port: " << webSocketURLExt.c_str() << std::endl;
+	PLOG(logDEBUG) << "Last data provider: " << lastDataProvider.c_str() <<  ", new data provider: " << dataprovider.c_str() << std::endl;
 
-	if (dataprovider.compare("FLIR") == 0)
-	{
-		try
+	//Need to check if the data provider has changed, if it has create appropriate new thread
+	if (dataprovider != lastDataProvider) {
+		if (dataprovider.compare("FLIR") == 0)
 		{
-			std::thread webthread(&PedestrianPlugin::StartWebSocket,this);
-			PLOG(logDEBUG) << "Thread started!!: " << std::endl;
-			
-			webthread.detach(); // wait for the thread to finish
+			PLOG(logDEBUG) << "Creating websocket to: " << webSocketIP.c_str() <<  " on port: " << webSocketURLExt.c_str() << std::endl;
 
-			std::thread xmlThread(&PedestrianPlugin::checkXML,this);
-			PLOG(logDEBUG) << "XML Thread started!!: " << std::endl;
-			
-			xmlThread.detach(); // wait for the thread to finish
-
-		}
-		catch(const std::exception& e)
-		{
-			PLOG(logERROR) << "Error connecting to websocket: " << e.what() << std::endl;
-		}
+			try
+			{
+				std::thread webthread(&PedestrianPlugin::StartWebSocket,this);
+				PLOG(logDEBUG) << "Thread started!!: " << std::endl;
 				
-			
+				webthread.detach(); // wait for the thread to finish
+
+				std::thread xmlThread(&PedestrianPlugin::checkXML,this);
+				PLOG(logDEBUG) << "XML Thread started!!: " << std::endl;
+				
+				xmlThread.detach(); // wait for the thread to finish
+
+			}
+			catch(const std::exception& e)
+			{
+				PLOG(logERROR) << "Error connecting to websocket: " << e.what() << std::endl;
+			}
+					
+				
+		}
+		else  // default if PSM XML data consumed using the webservice implementation
+		{
+			PLOG(logDEBUG) << "Starting ped plugin web server" << std::endl;
+
+			std::thread webthread(&PedestrianPlugin::StartWebService,this);
+			webthread.detach(); // wait for the thread to finish
+		}
+		
+		lastDataProvider = dataprovider;
 	}
-	else  // default if PSM XML data consumed using the webservice implementation
-	{
-		std::thread webthread(&PedestrianPlugin::StartWebService,this);
-		webthread.detach(); // wait for the thread to finish
-	}
+	
+
 }
 
 void PedestrianPlugin::OnConfigChanged(const char *key, const char *value)

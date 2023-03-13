@@ -28,13 +28,13 @@ OAIDefaultApiHandler::~OAIDefaultApiHandler(){
 
 }
 
-void OAIDefaultApiHandler::sendXMLPost(OAIPsm oai_psm) {
+void OAIDefaultApiHandler::psmPost(OAIPsm oai_psm) {
     Q_UNUSED(oai_psm);
     auto reqObj = qobject_cast<OAIDefaultApiRequest*>(sender());
     if( reqObj != nullptr )
     {
         
-        reqObj->sendXMLPostResponse();
+        reqObj->psmPostResponse();
     }
 }
 

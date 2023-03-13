@@ -20,9 +20,15 @@ PedestrianPluginHandler::PedestrianPluginHandler() : OpenAPI::OAIDefaultApiHandl
 }
 
 
-void PedestrianPluginHandler::sendXMLPost(OpenAPI::OAIPsm oai_psm) {
+void PedestrianPluginHandler::psmPost(OpenAPI::OAIPsm oai_psm) {
 	psmXML = oai_psm.asJson().toStdString();
-	std::cout << "as json: " << psmXML << std::endl;
+	
+	auto reqObj = qobject_cast<OpenAPI::OAIDefaultApiRequest *>(sender());
+	if (reqObj != nullptr)
+	{	
+		//get raw socket and set psm xml
+		reqObj->psmPostResponse();
+	}
 
 }
 

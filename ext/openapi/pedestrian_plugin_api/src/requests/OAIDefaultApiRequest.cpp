@@ -49,9 +49,9 @@ QHttpEngine::Socket* OAIDefaultApiRequest::getRawSocket(){
 }
 
 
-void OAIDefaultApiRequest::sendXMLPostRequest(){
-    qDebug() << "/pedestrian_plugin/sendXML";
-    connect(this, &OAIDefaultApiRequest::sendXMLPost, handler.data(), &OAIDefaultApiHandler::sendXMLPost);
+void OAIDefaultApiRequest::psmPostRequest(){
+    qDebug() << "/pedestrian_plugin/psm";
+    connect(this, &OAIDefaultApiRequest::psmPost, handler.data(), &OAIDefaultApiHandler::psmPost);
 
     
  
@@ -63,12 +63,12 @@ void OAIDefaultApiRequest::sendXMLPostRequest(){
     ::OpenAPI::fromJsonValue(oai_psm, obj);
     
 
-    emit sendXMLPost(oai_psm);
+    emit psmPost(oai_psm);
 }
 
 
 
-void OAIDefaultApiRequest::sendXMLPostResponse(){
+void OAIDefaultApiRequest::psmPostResponse(){
     setSocketResponseHeaders();
     socket->setStatusCode(QHttpEngine::Socket::OK);
     socket->writeHeaders();
@@ -78,7 +78,7 @@ void OAIDefaultApiRequest::sendXMLPostResponse(){
 }
 
 
-void OAIDefaultApiRequest::sendXMLPostError(QNetworkReply::NetworkError error_type, QString& error_str){
+void OAIDefaultApiRequest::psmPostError(QNetworkReply::NetworkError error_type, QString& error_str){
     Q_UNUSED(error_type); // TODO: Remap error_type to QHttpEngine::Socket errors
     setSocketResponseHeaders();
     socket->setStatusCode(QHttpEngine::Socket::NotFound);

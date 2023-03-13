@@ -24,6 +24,7 @@
 
 #include <pedestrian_plugin_server_api_lib/OAIApiRouter.h>
 #include <pedestrian_plugin_server_api_lib/OAIDefaultApiHandler.h>
+#include <pedestrian_plugin_server_api_lib/OAIDefaultApiRequest.h>
 #include <pedestrian_plugin_server_api_lib/OAIPsm.h>
 #include <iostream>
 
@@ -41,7 +42,7 @@ public:
 	std::string psmXML;
 
 	// Virtual method override.
-	void sendXMLPost(OpenAPI::OAIPsm oai_psm);
+	void psmPost(OpenAPI::OAIPsm oai_psm);
 	
 	std::string getPsmXML();
 };

@@ -29,7 +29,7 @@ public:
 
 
 public slots:
-    virtual void sendXMLPost(OAIPsm oai_psm);
+    virtual void psmPost(OAIPsm oai_psm);
     
 
 };

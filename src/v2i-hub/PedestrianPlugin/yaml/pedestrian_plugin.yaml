@@ -5,7 +5,7 @@ info:
 servers:
   - url: http://localhost:9000/pedestrian_plugin/
 paths:
-  /sendXML:
+  /psm:
     post:  
       requestBody:
           description: The PSM XML to post 
