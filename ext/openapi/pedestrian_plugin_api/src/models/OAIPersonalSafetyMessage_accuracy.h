@@ -10,13 +10,13 @@
  */
 
 /*
- * OAIAll_vals_accuracy.h
+ * OAIPersonalSafetyMessage_accuracy.h
  *
  * 
  */
 
-#ifndef OAIAll_vals_accuracy_H
-#define OAIAll_vals_accuracy_H
+#ifndef OAIPersonalSafetyMessage_accuracy_H
+#define OAIPersonalSafetyMessage_accuracy_H
 
 #include <QJsonObject>
 
@@ -26,11 +26,11 @@
 
 namespace OpenAPI {
 
-class OAIAll_vals_accuracy : public OAIObject {
+class OAIPersonalSafetyMessage_accuracy : public OAIObject {
 public:
-    OAIAll_vals_accuracy();
-    OAIAll_vals_accuracy(QString json);
-    ~OAIAll_vals_accuracy() override;
+    OAIPersonalSafetyMessage_accuracy();
+    OAIPersonalSafetyMessage_accuracy(QString json);
+    ~OAIPersonalSafetyMessage_accuracy() override;
 
     QString asJson() const override;
     QJsonObject asJsonObject() const override;
@@ -73,6 +73,6 @@ private:
 
 } // namespace OpenAPI
 
-Q_DECLARE_METATYPE(OpenAPI::OAIAll_vals_accuracy)
+Q_DECLARE_METATYPE(OpenAPI::OAIPersonalSafetyMessage_accuracy)
 
-#endif // OAIAll_vals_accuracy_H
+#endif // OAIPersonalSafetyMessage_accuracy_H

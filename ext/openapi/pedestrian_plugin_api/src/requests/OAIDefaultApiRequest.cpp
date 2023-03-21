@@ -53,17 +53,52 @@ void OAIDefaultApiRequest::psmPostRequest(){
     qDebug() << "/pedestrian_plugin/psm";
     connect(this, &OAIDefaultApiRequest::psmPost, handler.data(), &OAIDefaultApiHandler::psmPost);
 
-    
- 
-    
-    QJsonDocument doc;
-    socket->readJson(doc);
-    QJsonObject obj = doc.object();
-    OAIPsm oai_psm;
-    ::OpenAPI::fromJsonValue(oai_psm, obj);
-    
+    //Read in the psm xml post
+    QString st; 
+    while(socket->bytesAvailable()>0)
+    {	
+        st.append(socket->readAll());
+    }
+    //Create substring starting at beginning of PSM payload
+    std::string socketStr = st.toStdString();
+    std::string delimiter = "<P";
+    std::string psm_xml = socketStr.substr(socketStr.find(delimiter), socketStr.length());
 
-    emit psmPost(oai_psm);
+    //Convert from xml to json
+    std::stringstream iss;
+    iss << psm_xml;
+    boost::property_tree::ptree parent_node;
+    boost::property_tree::read_xml(iss, parent_node);
+
+    //
+    // std::ostringstream test;
+    // write_xml(test, parent_node);
+    // std::cout << "parent node: " << test.str() << std::endl;
+    //
+
+    std::stringstream oss;
+    boost::property_tree::json_parser::write_json(oss, parent_node);
+    std::string json_str = oss.str();
+    std::cout << "json_str: " << json_str << std::endl;
+
+    QString data = QString::fromStdString(json_str); 
+    qDebug() << "data: " << data;
+
+    QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
+    QJsonObject obj = doc.object(); 
+    QString strFromObj = doc.toJson(QJsonDocument::Compact).toStdString().c_str();
+    qDebug() << "strFromObj: " << strFromObj;
+
+    // QJsonDocument doc;
+    //socket->readJson(doc);
+    // QJsonObject obj = doc.object();
+    
+    OAIPersonalSafetyMessage oai_personal_safety_message;
+    // ::OpenAPI::fromJsonValue(oai_personal_safety_message, obj);
+    oai_personal_safety_message.fromJson(data);
+
+
+    emit psmPost(oai_personal_safety_message);
 }
 
 

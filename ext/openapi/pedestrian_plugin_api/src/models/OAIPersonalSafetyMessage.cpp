@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "OAIAll_vals.h"
+#include "OAIPersonalSafetyMessage.h"
 
 #include <QDebug>
 #include <QJsonArray>
@@ -20,18 +20,18 @@
 
 namespace OpenAPI {
 
-OAIAll_vals::OAIAll_vals(QString json) {
+OAIPersonalSafetyMessage::OAIPersonalSafetyMessage(QString json) {
     this->initializeModel();
     this->fromJson(json);
 }
 
-OAIAll_vals::OAIAll_vals() {
+OAIPersonalSafetyMessage::OAIPersonalSafetyMessage() {
     this->initializeModel();
 }
 
-OAIAll_vals::~OAIAll_vals() {}
+OAIPersonalSafetyMessage::~OAIPersonalSafetyMessage() {}
 
-void OAIAll_vals::initializeModel() {
+void OAIPersonalSafetyMessage::initializeModel() {
 
     m_basic_type_isSet = false;
     m_basic_type_isValid = false;
@@ -103,14 +103,14 @@ void OAIAll_vals::initializeModel() {
     m_animal_type_isValid = false;
 }
 
-void OAIAll_vals::fromJson(QString jsonString) {
+void OAIPersonalSafetyMessage::fromJson(QString jsonString) {
     QByteArray array(jsonString.toStdString().c_str());
     QJsonDocument doc = QJsonDocument::fromJson(array);
     QJsonObject jsonObject = doc.object();
     this->fromJsonObject(jsonObject);
 }
 
-void OAIAll_vals::fromJsonObject(QJsonObject json) {
+void OAIPersonalSafetyMessage::fromJsonObject(QJsonObject json) {
 
     m_basic_type_isValid = ::OpenAPI::fromJsonValue(basic_type, json[QString("basicType")]);
     m_basic_type_isSet = !json[QString("basicType")].isNull() && m_basic_type_isValid;
@@ -182,14 +182,14 @@ void OAIAll_vals::fromJsonObject(QJsonObject json) {
     m_animal_type_isSet = !json[QString("animalType")].isNull() && m_animal_type_isValid;
 }
 
-QString OAIAll_vals::asJson() const {
+QString OAIPersonalSafetyMessage::asJson() const {
     QJsonObject obj = this->asJsonObject();
     QJsonDocument doc(obj);
     QByteArray bytes = doc.toJson();
     return QString(bytes);
 }
 
-QJsonObject OAIAll_vals::asJsonObject() const {
+QJsonObject OAIPersonalSafetyMessage::asJsonObject() const {
     QJsonObject obj;
     if (m_basic_type_isSet) {
         obj.insert(QString("basicType"), ::OpenAPI::toJsonValue(basic_type));
@@ -263,375 +263,375 @@ QJsonObject OAIAll_vals::asJsonObject() const {
     return obj;
 }
 
-double OAIAll_vals::getBasicType() const {
+QString OAIPersonalSafetyMessage::getBasicType() const {
     return basic_type;
 }
-void OAIAll_vals::setBasicType(const double &basic_type) {
+void OAIPersonalSafetyMessage::setBasicType(const QString &basic_type) {
     this->basic_type = basic_type;
     this->m_basic_type_isSet = true;
 }
 
-bool OAIAll_vals::is_basic_type_Set() const{
+bool OAIPersonalSafetyMessage::is_basic_type_Set() const{
     return m_basic_type_isSet;
 }
 
-bool OAIAll_vals::is_basic_type_Valid() const{
+bool OAIPersonalSafetyMessage::is_basic_type_Valid() const{
     return m_basic_type_isValid;
 }
 
-double OAIAll_vals::getSecMark() const {
+double OAIPersonalSafetyMessage::getSecMark() const {
     return sec_mark;
 }
-void OAIAll_vals::setSecMark(const double &sec_mark) {
+void OAIPersonalSafetyMessage::setSecMark(const double &sec_mark) {
     this->sec_mark = sec_mark;
     this->m_sec_mark_isSet = true;
 }
 
-bool OAIAll_vals::is_sec_mark_Set() const{
+bool OAIPersonalSafetyMessage::is_sec_mark_Set() const{
     return m_sec_mark_isSet;
 }
 
-bool OAIAll_vals::is_sec_mark_Valid() const{
+bool OAIPersonalSafetyMessage::is_sec_mark_Valid() const{
     return m_sec_mark_isValid;
 }
 
-double OAIAll_vals::getMsgCnt() const {
+double OAIPersonalSafetyMessage::getMsgCnt() const {
     return msg_cnt;
 }
-void OAIAll_vals::setMsgCnt(const double &msg_cnt) {
+void OAIPersonalSafetyMessage::setMsgCnt(const double &msg_cnt) {
     this->msg_cnt = msg_cnt;
     this->m_msg_cnt_isSet = true;
 }
 
-bool OAIAll_vals::is_msg_cnt_Set() const{
+bool OAIPersonalSafetyMessage::is_msg_cnt_Set() const{
     return m_msg_cnt_isSet;
 }
 
-bool OAIAll_vals::is_msg_cnt_Valid() const{
+bool OAIPersonalSafetyMessage::is_msg_cnt_Valid() const{
     return m_msg_cnt_isValid;
 }
 
-QString OAIAll_vals::getId() const {
+QString OAIPersonalSafetyMessage::getId() const {
     return id;
 }
-void OAIAll_vals::setId(const QString &id) {
+void OAIPersonalSafetyMessage::setId(const QString &id) {
     this->id = id;
     this->m_id_isSet = true;
 }
 
-bool OAIAll_vals::is_id_Set() const{
+bool OAIPersonalSafetyMessage::is_id_Set() const{
     return m_id_isSet;
 }
 
-bool OAIAll_vals::is_id_Valid() const{
+bool OAIPersonalSafetyMessage::is_id_Valid() const{
     return m_id_isValid;
 }
 
-OAIAll_vals_position OAIAll_vals::getPosition() const {
+OAIPersonalSafetyMessage_position OAIPersonalSafetyMessage::getPosition() const {
     return position;
 }
-void OAIAll_vals::setPosition(const OAIAll_vals_position &position) {
+void OAIPersonalSafetyMessage::setPosition(const OAIPersonalSafetyMessage_position &position) {
     this->position = position;
     this->m_position_isSet = true;
 }
 
-bool OAIAll_vals::is_position_Set() const{
+bool OAIPersonalSafetyMessage::is_position_Set() const{
     return m_position_isSet;
 }
 
-bool OAIAll_vals::is_position_Valid() const{
+bool OAIPersonalSafetyMessage::is_position_Valid() const{
     return m_position_isValid;
 }
 
-OAIAll_vals_accuracy OAIAll_vals::getAccuracy() const {
+OAIPersonalSafetyMessage_accuracy OAIPersonalSafetyMessage::getAccuracy() const {
     return accuracy;
 }
-void OAIAll_vals::setAccuracy(const OAIAll_vals_accuracy &accuracy) {
+void OAIPersonalSafetyMessage::setAccuracy(const OAIPersonalSafetyMessage_accuracy &accuracy) {
     this->accuracy = accuracy;
     this->m_accuracy_isSet = true;
 }
 
-bool OAIAll_vals::is_accuracy_Set() const{
+bool OAIPersonalSafetyMessage::is_accuracy_Set() const{
     return m_accuracy_isSet;
 }
 
-bool OAIAll_vals::is_accuracy_Valid() const{
+bool OAIPersonalSafetyMessage::is_accuracy_Valid() const{
     return m_accuracy_isValid;
 }
 
-double OAIAll_vals::getSpeed() const {
+double OAIPersonalSafetyMessage::getSpeed() const {
     return speed;
 }
-void OAIAll_vals::setSpeed(const double &speed) {
+void OAIPersonalSafetyMessage::setSpeed(const double &speed) {
     this->speed = speed;
     this->m_speed_isSet = true;
 }
 
-bool OAIAll_vals::is_speed_Set() const{
+bool OAIPersonalSafetyMessage::is_speed_Set() const{
     return m_speed_isSet;
 }
 
-bool OAIAll_vals::is_speed_Valid() const{
+bool OAIPersonalSafetyMessage::is_speed_Valid() const{
     return m_speed_isValid;
 }
 
-double OAIAll_vals::getHeading() const {
+double OAIPersonalSafetyMessage::getHeading() const {
     return heading;
 }
-void OAIAll_vals::setHeading(const double &heading) {
+void OAIPersonalSafetyMessage::setHeading(const double &heading) {
     this->heading = heading;
     this->m_heading_isSet = true;
 }
 
-bool OAIAll_vals::is_heading_Set() const{
+bool OAIPersonalSafetyMessage::is_heading_Set() const{
     return m_heading_isSet;
 }
 
-bool OAIAll_vals::is_heading_Valid() const{
+bool OAIPersonalSafetyMessage::is_heading_Valid() const{
     return m_heading_isValid;
 }
 
-OAIAll_vals_accelSet OAIAll_vals::getAccelSet() const {
+OAIPersonalSafetyMessage_accelSet OAIPersonalSafetyMessage::getAccelSet() const {
     return accel_set;
 }
-void OAIAll_vals::setAccelSet(const OAIAll_vals_accelSet &accel_set) {
+void OAIPersonalSafetyMessage::setAccelSet(const OAIPersonalSafetyMessage_accelSet &accel_set) {
     this->accel_set = accel_set;
     this->m_accel_set_isSet = true;
 }
 
-bool OAIAll_vals::is_accel_set_Set() const{
+bool OAIPersonalSafetyMessage::is_accel_set_Set() const{
     return m_accel_set_isSet;
 }
 
-bool OAIAll_vals::is_accel_set_Valid() const{
+bool OAIPersonalSafetyMessage::is_accel_set_Valid() const{
     return m_accel_set_isValid;
 }
 
-OAIAll_vals_pathPrediction OAIAll_vals::getPathPrediction() const {
+OAIPersonalSafetyMessage_pathPrediction OAIPersonalSafetyMessage::getPathPrediction() const {
     return path_prediction;
 }
-void OAIAll_vals::setPathPrediction(const OAIAll_vals_pathPrediction &path_prediction) {
+void OAIPersonalSafetyMessage::setPathPrediction(const OAIPersonalSafetyMessage_pathPrediction &path_prediction) {
     this->path_prediction = path_prediction;
     this->m_path_prediction_isSet = true;
 }
 
-bool OAIAll_vals::is_path_prediction_Set() const{
+bool OAIPersonalSafetyMessage::is_path_prediction_Set() const{
     return m_path_prediction_isSet;
 }
 
-bool OAIAll_vals::is_path_prediction_Valid() const{
+bool OAIPersonalSafetyMessage::is_path_prediction_Valid() const{
     return m_path_prediction_isValid;
 }
 
-QString OAIAll_vals::getUseState() const {
+QString OAIPersonalSafetyMessage::getUseState() const {
     return use_state;
 }
-void OAIAll_vals::setUseState(const QString &use_state) {
+void OAIPersonalSafetyMessage::setUseState(const QString &use_state) {
     this->use_state = use_state;
     this->m_use_state_isSet = true;
 }
 
-bool OAIAll_vals::is_use_state_Set() const{
+bool OAIPersonalSafetyMessage::is_use_state_Set() const{
     return m_use_state_isSet;
 }
 
-bool OAIAll_vals::is_use_state_Valid() const{
+bool OAIPersonalSafetyMessage::is_use_state_Valid() const{
     return m_use_state_isValid;
 }
 
-bool OAIAll_vals::isCrossRequest() const {
+bool OAIPersonalSafetyMessage::isCrossRequest() const {
     return cross_request;
 }
-void OAIAll_vals::setCrossRequest(const bool &cross_request) {
+void OAIPersonalSafetyMessage::setCrossRequest(const bool &cross_request) {
     this->cross_request = cross_request;
     this->m_cross_request_isSet = true;
 }
 
-bool OAIAll_vals::is_cross_request_Set() const{
+bool OAIPersonalSafetyMessage::is_cross_request_Set() const{
     return m_cross_request_isSet;
 }
 
-bool OAIAll_vals::is_cross_request_Valid() const{
+bool OAIPersonalSafetyMessage::is_cross_request_Valid() const{
     return m_cross_request_isValid;
 }
 
-bool OAIAll_vals::isCrossState() const {
+bool OAIPersonalSafetyMessage::isCrossState() const {
     return cross_state;
 }
-void OAIAll_vals::setCrossState(const bool &cross_state) {
+void OAIPersonalSafetyMessage::setCrossState(const bool &cross_state) {
     this->cross_state = cross_state;
     this->m_cross_state_isSet = true;
 }
 
-bool OAIAll_vals::is_cross_state_Set() const{
+bool OAIPersonalSafetyMessage::is_cross_state_Set() const{
     return m_cross_state_isSet;
 }
 
-bool OAIAll_vals::is_cross_state_Valid() const{
+bool OAIPersonalSafetyMessage::is_cross_state_Valid() const{
     return m_cross_state_isValid;
 }
 
-double OAIAll_vals::getClusterSize() const {
+double OAIPersonalSafetyMessage::getClusterSize() const {
     return cluster_size;
 }
-void OAIAll_vals::setClusterSize(const double &cluster_size) {
+void OAIPersonalSafetyMessage::setClusterSize(const double &cluster_size) {
     this->cluster_size = cluster_size;
     this->m_cluster_size_isSet = true;
 }
 
-bool OAIAll_vals::is_cluster_size_Set() const{
+bool OAIPersonalSafetyMessage::is_cluster_size_Set() const{
     return m_cluster_size_isSet;
 }
 
-bool OAIAll_vals::is_cluster_size_Valid() const{
+bool OAIPersonalSafetyMessage::is_cluster_size_Valid() const{
     return m_cluster_size_isValid;
 }
 
-double OAIAll_vals::getClusterRadius() const {
+double OAIPersonalSafetyMessage::getClusterRadius() const {
     return cluster_radius;
 }
-void OAIAll_vals::setClusterRadius(const double &cluster_radius) {
+void OAIPersonalSafetyMessage::setClusterRadius(const double &cluster_radius) {
     this->cluster_radius = cluster_radius;
     this->m_cluster_radius_isSet = true;
 }
 
-bool OAIAll_vals::is_cluster_radius_Set() const{
+bool OAIPersonalSafetyMessage::is_cluster_radius_Set() const{
     return m_cluster_radius_isSet;
 }
 
-bool OAIAll_vals::is_cluster_radius_Valid() const{
+bool OAIPersonalSafetyMessage::is_cluster_radius_Valid() const{
     return m_cluster_radius_isValid;
 }
 
-QString OAIAll_vals::getEventResponderType() const {
+QString OAIPersonalSafetyMessage::getEventResponderType() const {
     return event_responder_type;
 }
-void OAIAll_vals::setEventResponderType(const QString &event_responder_type) {
+void OAIPersonalSafetyMessage::setEventResponderType(const QString &event_responder_type) {
     this->event_responder_type = event_responder_type;
     this->m_event_responder_type_isSet = true;
 }
 
-bool OAIAll_vals::is_event_responder_type_Set() const{
+bool OAIPersonalSafetyMessage::is_event_responder_type_Set() const{
     return m_event_responder_type_isSet;
 }
 
-bool OAIAll_vals::is_event_responder_type_Valid() const{
+bool OAIPersonalSafetyMessage::is_event_responder_type_Valid() const{
     return m_event_responder_type_isValid;
 }
 
-QString OAIAll_vals::getActivityType() const {
+QString OAIPersonalSafetyMessage::getActivityType() const {
     return activity_type;
 }
-void OAIAll_vals::setActivityType(const QString &activity_type) {
+void OAIPersonalSafetyMessage::setActivityType(const QString &activity_type) {
     this->activity_type = activity_type;
     this->m_activity_type_isSet = true;
 }
 
-bool OAIAll_vals::is_activity_type_Set() const{
+bool OAIPersonalSafetyMessage::is_activity_type_Set() const{
     return m_activity_type_isSet;
 }
 
-bool OAIAll_vals::is_activity_type_Valid() const{
+bool OAIPersonalSafetyMessage::is_activity_type_Valid() const{
     return m_activity_type_isValid;
 }
 
-QString OAIAll_vals::getActivitySubType() const {
+QString OAIPersonalSafetyMessage::getActivitySubType() const {
     return activity_sub_type;
 }
-void OAIAll_vals::setActivitySubType(const QString &activity_sub_type) {
+void OAIPersonalSafetyMessage::setActivitySubType(const QString &activity_sub_type) {
     this->activity_sub_type = activity_sub_type;
     this->m_activity_sub_type_isSet = true;
 }
 
-bool OAIAll_vals::is_activity_sub_type_Set() const{
+bool OAIPersonalSafetyMessage::is_activity_sub_type_Set() const{
     return m_activity_sub_type_isSet;
 }
 
-bool OAIAll_vals::is_activity_sub_type_Valid() const{
+bool OAIPersonalSafetyMessage::is_activity_sub_type_Valid() const{
     return m_activity_sub_type_isValid;
 }
 
-QString OAIAll_vals::getAssistType() const {
+QString OAIPersonalSafetyMessage::getAssistType() const {
     return assist_type;
 }
-void OAIAll_vals::setAssistType(const QString &assist_type) {
+void OAIPersonalSafetyMessage::setAssistType(const QString &assist_type) {
     this->assist_type = assist_type;
     this->m_assist_type_isSet = true;
 }
 
-bool OAIAll_vals::is_assist_type_Set() const{
+bool OAIPersonalSafetyMessage::is_assist_type_Set() const{
     return m_assist_type_isSet;
 }
 
-bool OAIAll_vals::is_assist_type_Valid() const{
+bool OAIPersonalSafetyMessage::is_assist_type_Valid() const{
     return m_assist_type_isValid;
 }
 
-QString OAIAll_vals::getSizing() const {
+QString OAIPersonalSafetyMessage::getSizing() const {
     return sizing;
 }
-void OAIAll_vals::setSizing(const QString &sizing) {
+void OAIPersonalSafetyMessage::setSizing(const QString &sizing) {
     this->sizing = sizing;
     this->m_sizing_isSet = true;
 }
 
-bool OAIAll_vals::is_sizing_Set() const{
+bool OAIPersonalSafetyMessage::is_sizing_Set() const{
     return m_sizing_isSet;
 }
 
-bool OAIAll_vals::is_sizing_Valid() const{
+bool OAIPersonalSafetyMessage::is_sizing_Valid() const{
     return m_sizing_isValid;
 }
 
-QString OAIAll_vals::getAttachment() const {
+QString OAIPersonalSafetyMessage::getAttachment() const {
     return attachment;
 }
-void OAIAll_vals::setAttachment(const QString &attachment) {
+void OAIPersonalSafetyMessage::setAttachment(const QString &attachment) {
     this->attachment = attachment;
     this->m_attachment_isSet = true;
 }
 
-bool OAIAll_vals::is_attachment_Set() const{
+bool OAIPersonalSafetyMessage::is_attachment_Set() const{
     return m_attachment_isSet;
 }
 
-bool OAIAll_vals::is_attachment_Valid() const{
+bool OAIPersonalSafetyMessage::is_attachment_Valid() const{
     return m_attachment_isValid;
 }
 
-double OAIAll_vals::getAttachmentRadius() const {
+double OAIPersonalSafetyMessage::getAttachmentRadius() const {
     return attachment_radius;
 }
-void OAIAll_vals::setAttachmentRadius(const double &attachment_radius) {
+void OAIPersonalSafetyMessage::setAttachmentRadius(const double &attachment_radius) {
     this->attachment_radius = attachment_radius;
     this->m_attachment_radius_isSet = true;
 }
 
-bool OAIAll_vals::is_attachment_radius_Set() const{
+bool OAIPersonalSafetyMessage::is_attachment_radius_Set() const{
     return m_attachment_radius_isSet;
 }
 
-bool OAIAll_vals::is_attachment_radius_Valid() const{
+bool OAIPersonalSafetyMessage::is_attachment_radius_Valid() const{
     return m_attachment_radius_isValid;
 }
 
-QString OAIAll_vals::getAnimalType() const {
+QString OAIPersonalSafetyMessage::getAnimalType() const {
     return animal_type;
 }
-void OAIAll_vals::setAnimalType(const QString &animal_type) {
+void OAIPersonalSafetyMessage::setAnimalType(const QString &animal_type) {
     this->animal_type = animal_type;
     this->m_animal_type_isSet = true;
 }
 
-bool OAIAll_vals::is_animal_type_Set() const{
+bool OAIPersonalSafetyMessage::is_animal_type_Set() const{
     return m_animal_type_isSet;
 }
 
-bool OAIAll_vals::is_animal_type_Valid() const{
+bool OAIPersonalSafetyMessage::is_animal_type_Valid() const{
     return m_animal_type_isValid;
 }
 
-bool OAIAll_vals::isSet() const {
+bool OAIPersonalSafetyMessage::isSet() const {
     bool isObjectUpdated = false;
     do {
         if (m_basic_type_isSet) {
@@ -752,7 +752,7 @@ bool OAIAll_vals::isSet() const {
     return isObjectUpdated;
 }
 
-bool OAIAll_vals::isValid() const {
+bool OAIPersonalSafetyMessage::isValid() const {
     // only required properties are required for the object to be considered valid
     return m_basic_type_isValid && m_sec_mark_isValid && m_msg_cnt_isValid && m_id_isValid && m_position_isValid && m_accuracy_isValid && m_speed_isValid && m_heading_isValid && true;
 }

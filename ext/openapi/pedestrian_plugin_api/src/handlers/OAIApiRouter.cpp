@@ -39,20 +39,14 @@ void OAIApiRouter::setOAIDefaultApiHandler(QSharedPointer<OAIDefaultApiHandler> 
 }
 
 void OAIApiRouter::setUpRoutes() {
-    qDebug() << "Setting up routes";
-
+    
     Routes.insert(QString("%1 %2").arg("POST").arg("/pedestrian_plugin/psm").toLower(), [this](QHttpEngine::Socket *socket) {
             auto reqObj = new OAIDefaultApiRequest(socket, mOAIDefaultApiHandler);
             reqObj->psmPostRequest();
     });
-
-    qDebug() << "Finished setting up routes";
-
 }
 
 void OAIApiRouter::processRequest(QHttpEngine::Socket *socket){
-    qDebug() << "Processing request";
-
     if( handleRequest(socket) ){
         return;
     }
@@ -68,8 +62,6 @@ void OAIApiRouter::processRequest(QHttpEngine::Socket *socket){
 
 bool OAIApiRouter::handleRequest(QHttpEngine::Socket *socket){
     auto reqPath = QString("%1 %2").arg(fromQHttpEngineMethod(socket->method())).arg(socket->path()).toLower();
-    qDebug() << "Req path: " << reqPath;
-
     if ( Routes.contains(reqPath) ) {
         Routes.value(reqPath).operator()(socket);
         return true;

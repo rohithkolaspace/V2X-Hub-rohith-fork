@@ -10,13 +10,13 @@
  */
 
 /*
- * OAIAll_vals_pathPrediction.h
+ * OAIPersonalSafetyMessage_pathPrediction.h
  *
  * 
  */
 
-#ifndef OAIAll_vals_pathPrediction_H
-#define OAIAll_vals_pathPrediction_H
+#ifndef OAIPersonalSafetyMessage_pathPrediction_H
+#define OAIPersonalSafetyMessage_pathPrediction_H
 
 #include <QJsonObject>
 
@@ -26,11 +26,11 @@
 
 namespace OpenAPI {
 
-class OAIAll_vals_pathPrediction : public OAIObject {
+class OAIPersonalSafetyMessage_pathPrediction : public OAIObject {
 public:
-    OAIAll_vals_pathPrediction();
-    OAIAll_vals_pathPrediction(QString json);
-    ~OAIAll_vals_pathPrediction() override;
+    OAIPersonalSafetyMessage_pathPrediction();
+    OAIPersonalSafetyMessage_pathPrediction(QString json);
+    ~OAIPersonalSafetyMessage_pathPrediction() override;
 
     QString asJson() const override;
     QJsonObject asJsonObject() const override;
@@ -64,6 +64,6 @@ private:
 
 } // namespace OpenAPI
 
-Q_DECLARE_METATYPE(OpenAPI::OAIAll_vals_pathPrediction)
+Q_DECLARE_METATYPE(OpenAPI::OAIPersonalSafetyMessage_pathPrediction)
 
-#endif // OAIAll_vals_pathPrediction_H
+#endif // OAIPersonalSafetyMessage_pathPrediction_H

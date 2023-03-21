@@ -19,9 +19,13 @@
 #include <QSharedPointer>
 
 #include <qhttpengine/socket.h>
-#include "OAIPsm.h"
+#include "OAIPersonalSafetyMessage.h"
 #include <QString>
 #include "OAIDefaultApiHandler.h"
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <iostream>
 
 namespace OpenAPI {
 
@@ -53,7 +57,7 @@ public:
     void setResponseHeaders(const QMultiMap<QString,QString>& headers);
 
 signals:
-    void psmPost(OAIPsm oai_psm);
+    void psmPost(OAIPersonalSafetyMessage oai_personal_safety_message);
     
 
 private:

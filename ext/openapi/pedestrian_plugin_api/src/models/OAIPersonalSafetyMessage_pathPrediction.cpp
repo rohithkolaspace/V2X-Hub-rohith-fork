@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "OAIAll_vals_pathPrediction.h"
+#include "OAIPersonalSafetyMessage_pathPrediction.h"
 
 #include <QDebug>
 #include <QJsonArray>
@@ -20,18 +20,18 @@
 
 namespace OpenAPI {
 
-OAIAll_vals_pathPrediction::OAIAll_vals_pathPrediction(QString json) {
+OAIPersonalSafetyMessage_pathPrediction::OAIPersonalSafetyMessage_pathPrediction(QString json) {
     this->initializeModel();
     this->fromJson(json);
 }
 
-OAIAll_vals_pathPrediction::OAIAll_vals_pathPrediction() {
+OAIPersonalSafetyMessage_pathPrediction::OAIPersonalSafetyMessage_pathPrediction() {
     this->initializeModel();
 }
 
-OAIAll_vals_pathPrediction::~OAIAll_vals_pathPrediction() {}
+OAIPersonalSafetyMessage_pathPrediction::~OAIPersonalSafetyMessage_pathPrediction() {}
 
-void OAIAll_vals_pathPrediction::initializeModel() {
+void OAIPersonalSafetyMessage_pathPrediction::initializeModel() {
 
     m_radius_of_curve_isSet = false;
     m_radius_of_curve_isValid = false;
@@ -40,14 +40,14 @@ void OAIAll_vals_pathPrediction::initializeModel() {
     m_confidence_isValid = false;
 }
 
-void OAIAll_vals_pathPrediction::fromJson(QString jsonString) {
+void OAIPersonalSafetyMessage_pathPrediction::fromJson(QString jsonString) {
     QByteArray array(jsonString.toStdString().c_str());
     QJsonDocument doc = QJsonDocument::fromJson(array);
     QJsonObject jsonObject = doc.object();
     this->fromJsonObject(jsonObject);
 }
 
-void OAIAll_vals_pathPrediction::fromJsonObject(QJsonObject json) {
+void OAIPersonalSafetyMessage_pathPrediction::fromJsonObject(QJsonObject json) {
 
     m_radius_of_curve_isValid = ::OpenAPI::fromJsonValue(radius_of_curve, json[QString("radiusOfCurve")]);
     m_radius_of_curve_isSet = !json[QString("radiusOfCurve")].isNull() && m_radius_of_curve_isValid;
@@ -56,14 +56,14 @@ void OAIAll_vals_pathPrediction::fromJsonObject(QJsonObject json) {
     m_confidence_isSet = !json[QString("confidence")].isNull() && m_confidence_isValid;
 }
 
-QString OAIAll_vals_pathPrediction::asJson() const {
+QString OAIPersonalSafetyMessage_pathPrediction::asJson() const {
     QJsonObject obj = this->asJsonObject();
     QJsonDocument doc(obj);
     QByteArray bytes = doc.toJson();
     return QString(bytes);
 }
 
-QJsonObject OAIAll_vals_pathPrediction::asJsonObject() const {
+QJsonObject OAIPersonalSafetyMessage_pathPrediction::asJsonObject() const {
     QJsonObject obj;
     if (m_radius_of_curve_isSet) {
         obj.insert(QString("radiusOfCurve"), ::OpenAPI::toJsonValue(radius_of_curve));
@@ -74,39 +74,39 @@ QJsonObject OAIAll_vals_pathPrediction::asJsonObject() const {
     return obj;
 }
 
-double OAIAll_vals_pathPrediction::getRadiusOfCurve() const {
+double OAIPersonalSafetyMessage_pathPrediction::getRadiusOfCurve() const {
     return radius_of_curve;
 }
-void OAIAll_vals_pathPrediction::setRadiusOfCurve(const double &radius_of_curve) {
+void OAIPersonalSafetyMessage_pathPrediction::setRadiusOfCurve(const double &radius_of_curve) {
     this->radius_of_curve = radius_of_curve;
     this->m_radius_of_curve_isSet = true;
 }
 
-bool OAIAll_vals_pathPrediction::is_radius_of_curve_Set() const{
+bool OAIPersonalSafetyMessage_pathPrediction::is_radius_of_curve_Set() const{
     return m_radius_of_curve_isSet;
 }
 
-bool OAIAll_vals_pathPrediction::is_radius_of_curve_Valid() const{
+bool OAIPersonalSafetyMessage_pathPrediction::is_radius_of_curve_Valid() const{
     return m_radius_of_curve_isValid;
 }
 
-double OAIAll_vals_pathPrediction::getConfidence() const {
+double OAIPersonalSafetyMessage_pathPrediction::getConfidence() const {
     return confidence;
 }
-void OAIAll_vals_pathPrediction::setConfidence(const double &confidence) {
+void OAIPersonalSafetyMessage_pathPrediction::setConfidence(const double &confidence) {
     this->confidence = confidence;
     this->m_confidence_isSet = true;
 }
 
-bool OAIAll_vals_pathPrediction::is_confidence_Set() const{
+bool OAIPersonalSafetyMessage_pathPrediction::is_confidence_Set() const{
     return m_confidence_isSet;
 }
 
-bool OAIAll_vals_pathPrediction::is_confidence_Valid() const{
+bool OAIPersonalSafetyMessage_pathPrediction::is_confidence_Valid() const{
     return m_confidence_isValid;
 }
 
-bool OAIAll_vals_pathPrediction::isSet() const {
+bool OAIPersonalSafetyMessage_pathPrediction::isSet() const {
     bool isObjectUpdated = false;
     do {
         if (m_radius_of_curve_isSet) {
@@ -122,7 +122,7 @@ bool OAIAll_vals_pathPrediction::isSet() const {
     return isObjectUpdated;
 }
 
-bool OAIAll_vals_pathPrediction::isValid() const {
+bool OAIPersonalSafetyMessage_pathPrediction::isValid() const {
     // only required properties are required for the object to be considered valid
     return m_radius_of_curve_isValid && m_confidence_isValid && true;
 }

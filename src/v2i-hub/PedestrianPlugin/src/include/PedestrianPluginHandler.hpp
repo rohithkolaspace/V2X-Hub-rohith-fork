@@ -25,8 +25,9 @@
 #include <pedestrian_plugin_server_api_lib/OAIApiRouter.h>
 #include <pedestrian_plugin_server_api_lib/OAIDefaultApiHandler.h>
 #include <pedestrian_plugin_server_api_lib/OAIDefaultApiRequest.h>
-#include <pedestrian_plugin_server_api_lib/OAIPsm.h>
+#include <pedestrian_plugin_server_api_lib/OAIPersonalSafetyMessage.h>
 #include <iostream>
+#include <QString>
 
 namespace PedestrianPluginAPI
 {
@@ -42,9 +43,11 @@ public:
 	std::string psmXML;
 
 	// Virtual method override.
-	void psmPost(OpenAPI::OAIPsm oai_psm);
+	void psmPost(OpenAPI::OAIPersonalSafetyMessage oai_personal_safety_message);
 	
+	void setPsmXML(std::string psm);
 	std::string getPsmXML();
+
 };
 
 };

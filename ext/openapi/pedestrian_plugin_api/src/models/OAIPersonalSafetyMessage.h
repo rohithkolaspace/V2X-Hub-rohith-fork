@@ -10,20 +10,20 @@
  */
 
 /*
- * OAIAll_vals.h
+ * OAIPersonalSafetyMessage.h
  *
  * 
  */
 
-#ifndef OAIAll_vals_H
-#define OAIAll_vals_H
+#ifndef OAIPersonalSafetyMessage_H
+#define OAIPersonalSafetyMessage_H
 
 #include <QJsonObject>
 
-#include "OAIAll_vals_accelSet.h"
-#include "OAIAll_vals_accuracy.h"
-#include "OAIAll_vals_pathPrediction.h"
-#include "OAIAll_vals_position.h"
+#include "OAIPersonalSafetyMessage_accelSet.h"
+#include "OAIPersonalSafetyMessage_accuracy.h"
+#include "OAIPersonalSafetyMessage_pathPrediction.h"
+#include "OAIPersonalSafetyMessage_position.h"
 #include <QString>
 
 #include "OAIEnum.h"
@@ -31,19 +31,19 @@
 
 namespace OpenAPI {
 
-class OAIAll_vals : public OAIObject {
+class OAIPersonalSafetyMessage : public OAIObject {
 public:
-    OAIAll_vals();
-    OAIAll_vals(QString json);
-    ~OAIAll_vals() override;
+    OAIPersonalSafetyMessage();
+    OAIPersonalSafetyMessage(QString json);
+    ~OAIPersonalSafetyMessage() override;
 
     QString asJson() const override;
     QJsonObject asJsonObject() const override;
     void fromJsonObject(QJsonObject json) override;
     void fromJson(QString jsonString) override;
 
-    double getBasicType() const;
-    void setBasicType(const double &basic_type);
+    QString getBasicType() const;
+    void setBasicType(const QString &basic_type);
     bool is_basic_type_Set() const;
     bool is_basic_type_Valid() const;
 
@@ -62,13 +62,13 @@ public:
     bool is_id_Set() const;
     bool is_id_Valid() const;
 
-    OAIAll_vals_position getPosition() const;
-    void setPosition(const OAIAll_vals_position &position);
+    OAIPersonalSafetyMessage_position getPosition() const;
+    void setPosition(const OAIPersonalSafetyMessage_position &position);
     bool is_position_Set() const;
     bool is_position_Valid() const;
 
-    OAIAll_vals_accuracy getAccuracy() const;
-    void setAccuracy(const OAIAll_vals_accuracy &accuracy);
+    OAIPersonalSafetyMessage_accuracy getAccuracy() const;
+    void setAccuracy(const OAIPersonalSafetyMessage_accuracy &accuracy);
     bool is_accuracy_Set() const;
     bool is_accuracy_Valid() const;
 
@@ -82,13 +82,13 @@ public:
     bool is_heading_Set() const;
     bool is_heading_Valid() const;
 
-    OAIAll_vals_accelSet getAccelSet() const;
-    void setAccelSet(const OAIAll_vals_accelSet &accel_set);
+    OAIPersonalSafetyMessage_accelSet getAccelSet() const;
+    void setAccelSet(const OAIPersonalSafetyMessage_accelSet &accel_set);
     bool is_accel_set_Set() const;
     bool is_accel_set_Valid() const;
 
-    OAIAll_vals_pathPrediction getPathPrediction() const;
-    void setPathPrediction(const OAIAll_vals_pathPrediction &path_prediction);
+    OAIPersonalSafetyMessage_pathPrediction getPathPrediction() const;
+    void setPathPrediction(const OAIPersonalSafetyMessage_pathPrediction &path_prediction);
     bool is_path_prediction_Set() const;
     bool is_path_prediction_Valid() const;
 
@@ -163,7 +163,7 @@ public:
 private:
     void initializeModel();
 
-    double basic_type;
+    QString basic_type;
     bool m_basic_type_isSet;
     bool m_basic_type_isValid;
 
@@ -179,11 +179,11 @@ private:
     bool m_id_isSet;
     bool m_id_isValid;
 
-    OAIAll_vals_position position;
+    OAIPersonalSafetyMessage_position position;
     bool m_position_isSet;
     bool m_position_isValid;
 
-    OAIAll_vals_accuracy accuracy;
+    OAIPersonalSafetyMessage_accuracy accuracy;
     bool m_accuracy_isSet;
     bool m_accuracy_isValid;
 
@@ -195,11 +195,11 @@ private:
     bool m_heading_isSet;
     bool m_heading_isValid;
 
-    OAIAll_vals_accelSet accel_set;
+    OAIPersonalSafetyMessage_accelSet accel_set;
     bool m_accel_set_isSet;
     bool m_accel_set_isValid;
 
-    OAIAll_vals_pathPrediction path_prediction;
+    OAIPersonalSafetyMessage_pathPrediction path_prediction;
     bool m_path_prediction_isSet;
     bool m_path_prediction_isValid;
 
@@ -258,6 +258,6 @@ private:
 
 } // namespace OpenAPI
 
-Q_DECLARE_METATYPE(OpenAPI::OAIAll_vals)
+Q_DECLARE_METATYPE(OpenAPI::OAIPersonalSafetyMessage)
 
-#endif // OAIAll_vals_H
+#endif // OAIPersonalSafetyMessage_H

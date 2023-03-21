@@ -10,13 +10,13 @@
  */
 
 /*
- * OAIAll_vals_accelSet.h
+ * OAIPersonalSafetyMessage_accelSet.h
  *
  * 
  */
 
-#ifndef OAIAll_vals_accelSet_H
-#define OAIAll_vals_accelSet_H
+#ifndef OAIPersonalSafetyMessage_accelSet_H
+#define OAIPersonalSafetyMessage_accelSet_H
 
 #include <QJsonObject>
 
@@ -26,11 +26,11 @@
 
 namespace OpenAPI {
 
-class OAIAll_vals_accelSet : public OAIObject {
+class OAIPersonalSafetyMessage_accelSet : public OAIObject {
 public:
-    OAIAll_vals_accelSet();
-    OAIAll_vals_accelSet(QString json);
-    ~OAIAll_vals_accelSet() override;
+    OAIPersonalSafetyMessage_accelSet();
+    OAIPersonalSafetyMessage_accelSet(QString json);
+    ~OAIPersonalSafetyMessage_accelSet() override;
 
     QString asJson() const override;
     QJsonObject asJsonObject() const override;
@@ -82,6 +82,6 @@ private:
 
 } // namespace OpenAPI
 
-Q_DECLARE_METATYPE(OpenAPI::OAIAll_vals_accelSet)
+Q_DECLARE_METATYPE(OpenAPI::OAIPersonalSafetyMessage_accelSet)
 
-#endif // OAIAll_vals_accelSet_H
+#endif // OAIPersonalSafetyMessage_accelSet_H

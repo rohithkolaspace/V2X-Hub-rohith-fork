@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "OAIAll_vals_accelSet.h"
+#include "OAIPersonalSafetyMessage_accelSet.h"
 
 #include <QDebug>
 #include <QJsonArray>
@@ -20,18 +20,18 @@
 
 namespace OpenAPI {
 
-OAIAll_vals_accelSet::OAIAll_vals_accelSet(QString json) {
+OAIPersonalSafetyMessage_accelSet::OAIPersonalSafetyMessage_accelSet(QString json) {
     this->initializeModel();
     this->fromJson(json);
 }
 
-OAIAll_vals_accelSet::OAIAll_vals_accelSet() {
+OAIPersonalSafetyMessage_accelSet::OAIPersonalSafetyMessage_accelSet() {
     this->initializeModel();
 }
 
-OAIAll_vals_accelSet::~OAIAll_vals_accelSet() {}
+OAIPersonalSafetyMessage_accelSet::~OAIPersonalSafetyMessage_accelSet() {}
 
-void OAIAll_vals_accelSet::initializeModel() {
+void OAIPersonalSafetyMessage_accelSet::initializeModel() {
 
     m_r_long_isSet = false;
     m_r_long_isValid = false;
@@ -46,14 +46,14 @@ void OAIAll_vals_accelSet::initializeModel() {
     m_yaw_isValid = false;
 }
 
-void OAIAll_vals_accelSet::fromJson(QString jsonString) {
+void OAIPersonalSafetyMessage_accelSet::fromJson(QString jsonString) {
     QByteArray array(jsonString.toStdString().c_str());
     QJsonDocument doc = QJsonDocument::fromJson(array);
     QJsonObject jsonObject = doc.object();
     this->fromJsonObject(jsonObject);
 }
 
-void OAIAll_vals_accelSet::fromJsonObject(QJsonObject json) {
+void OAIPersonalSafetyMessage_accelSet::fromJsonObject(QJsonObject json) {
 
     m_r_long_isValid = ::OpenAPI::fromJsonValue(r_long, json[QString("long")]);
     m_r_long_isSet = !json[QString("long")].isNull() && m_r_long_isValid;
@@ -68,14 +68,14 @@ void OAIAll_vals_accelSet::fromJsonObject(QJsonObject json) {
     m_yaw_isSet = !json[QString("yaw")].isNull() && m_yaw_isValid;
 }
 
-QString OAIAll_vals_accelSet::asJson() const {
+QString OAIPersonalSafetyMessage_accelSet::asJson() const {
     QJsonObject obj = this->asJsonObject();
     QJsonDocument doc(obj);
     QByteArray bytes = doc.toJson();
     return QString(bytes);
 }
 
-QJsonObject OAIAll_vals_accelSet::asJsonObject() const {
+QJsonObject OAIPersonalSafetyMessage_accelSet::asJsonObject() const {
     QJsonObject obj;
     if (m_r_long_isSet) {
         obj.insert(QString("long"), ::OpenAPI::toJsonValue(r_long));
@@ -92,71 +92,71 @@ QJsonObject OAIAll_vals_accelSet::asJsonObject() const {
     return obj;
 }
 
-double OAIAll_vals_accelSet::getRLong() const {
+double OAIPersonalSafetyMessage_accelSet::getRLong() const {
     return r_long;
 }
-void OAIAll_vals_accelSet::setRLong(const double &r_long) {
+void OAIPersonalSafetyMessage_accelSet::setRLong(const double &r_long) {
     this->r_long = r_long;
     this->m_r_long_isSet = true;
 }
 
-bool OAIAll_vals_accelSet::is_r_long_Set() const{
+bool OAIPersonalSafetyMessage_accelSet::is_r_long_Set() const{
     return m_r_long_isSet;
 }
 
-bool OAIAll_vals_accelSet::is_r_long_Valid() const{
+bool OAIPersonalSafetyMessage_accelSet::is_r_long_Valid() const{
     return m_r_long_isValid;
 }
 
-double OAIAll_vals_accelSet::getLat() const {
+double OAIPersonalSafetyMessage_accelSet::getLat() const {
     return lat;
 }
-void OAIAll_vals_accelSet::setLat(const double &lat) {
+void OAIPersonalSafetyMessage_accelSet::setLat(const double &lat) {
     this->lat = lat;
     this->m_lat_isSet = true;
 }
 
-bool OAIAll_vals_accelSet::is_lat_Set() const{
+bool OAIPersonalSafetyMessage_accelSet::is_lat_Set() const{
     return m_lat_isSet;
 }
 
-bool OAIAll_vals_accelSet::is_lat_Valid() const{
+bool OAIPersonalSafetyMessage_accelSet::is_lat_Valid() const{
     return m_lat_isValid;
 }
 
-double OAIAll_vals_accelSet::getVert() const {
+double OAIPersonalSafetyMessage_accelSet::getVert() const {
     return vert;
 }
-void OAIAll_vals_accelSet::setVert(const double &vert) {
+void OAIPersonalSafetyMessage_accelSet::setVert(const double &vert) {
     this->vert = vert;
     this->m_vert_isSet = true;
 }
 
-bool OAIAll_vals_accelSet::is_vert_Set() const{
+bool OAIPersonalSafetyMessage_accelSet::is_vert_Set() const{
     return m_vert_isSet;
 }
 
-bool OAIAll_vals_accelSet::is_vert_Valid() const{
+bool OAIPersonalSafetyMessage_accelSet::is_vert_Valid() const{
     return m_vert_isValid;
 }
 
-double OAIAll_vals_accelSet::getYaw() const {
+double OAIPersonalSafetyMessage_accelSet::getYaw() const {
     return yaw;
 }
-void OAIAll_vals_accelSet::setYaw(const double &yaw) {
+void OAIPersonalSafetyMessage_accelSet::setYaw(const double &yaw) {
     this->yaw = yaw;
     this->m_yaw_isSet = true;
 }
 
-bool OAIAll_vals_accelSet::is_yaw_Set() const{
+bool OAIPersonalSafetyMessage_accelSet::is_yaw_Set() const{
     return m_yaw_isSet;
 }
 
-bool OAIAll_vals_accelSet::is_yaw_Valid() const{
+bool OAIPersonalSafetyMessage_accelSet::is_yaw_Valid() const{
     return m_yaw_isValid;
 }
 
-bool OAIAll_vals_accelSet::isSet() const {
+bool OAIPersonalSafetyMessage_accelSet::isSet() const {
     bool isObjectUpdated = false;
     do {
         if (m_r_long_isSet) {
@@ -182,7 +182,7 @@ bool OAIAll_vals_accelSet::isSet() const {
     return isObjectUpdated;
 }
 
-bool OAIAll_vals_accelSet::isValid() const {
+bool OAIPersonalSafetyMessage_accelSet::isValid() const {
     // only required properties are required for the object to be considered valid
     return true;
 }

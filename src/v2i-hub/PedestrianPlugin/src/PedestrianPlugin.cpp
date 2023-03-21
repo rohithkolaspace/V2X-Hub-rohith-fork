@@ -101,14 +101,6 @@ int PedestrianPlugin::StartWebService()
     router->setUpRoutes();
 	
 	QObject::connect(handler.data(), &OpenAPI::OAIApiRequestHandler::requestReceived, [&](QHttpEngine::Socket *socket) {
-		// QString st; 
-		// while(socket->bytesAvailable()>0)
-		// {	
-		// 	st.append(socket->readAll());
-		// }
-		// QByteArray array = st.toLocal8Bit();
-		// char* psmMsgdef = array.data();	
-	    // BroadcastPsm(psmMsgdef);
         router->processRequest(socket);
 
 		std::string psmStr = router->getPsm();
@@ -125,7 +117,6 @@ int PedestrianPlugin::StartWebService()
     });
 
     QHttpEngine::Server server(handler.data());
-    qDebug() << "Serving on " << address.toString() << ":" << port;
 
 	if (!server.listen(address, port)) {
         qCritical("Unable to listen on the specified port.");

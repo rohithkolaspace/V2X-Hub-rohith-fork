@@ -32,7 +32,7 @@ BuildTmxPlugin ()
 
 TARGET_INCLUDE_DIRECTORIES ( ${PROJECT_NAME} PUBLIC ${XercesC_INCLUDE_DIRS} ${NETSNMP_INCLUDE_DIRS} ${Qt5Core_INCLUDE_DIRS} ${Qt5Network_INCLUDE_DIRS})
 
-TARGET_LINK_LIBRARIES ( ${PROJECT_NAME} PUBLIC tmxutils ${XercesC_LIBRARY} ${NETSNMP_LIBRARIES} ${QHttpEngine_LIBRARY} Qt5Widgets Qt5Core Qt5Network ssl crypto qhttpengine pedestrian_plugin_server_api_lib) 
+TARGET_LINK_LIBRARIES ( ${PROJECT_NAME} PUBLIC tmxutils ${XercesC_LIBRARY} ${NETSNMP_LIBRARIES} ${QHttpEngine_LIBRARY} ${Boost_SYSTEM_LIBRARY} Qt5Widgets Qt5Core Qt5Network ssl crypto qhttpengine pedestrian_plugin_server_api_lib) 
 
 
 link_directories(${CMAKE_PREFIX_PATH}/lib)

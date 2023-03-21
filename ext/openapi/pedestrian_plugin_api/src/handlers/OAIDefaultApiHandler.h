@@ -14,7 +14,7 @@
 
 #include <QObject>
 
-#include "OAIPsm.h"
+#include "OAIPersonalSafetyMessage.h"
 #include <QString>
 
 namespace OpenAPI {
@@ -29,7 +29,7 @@ public:
 
 
 public slots:
-    virtual void psmPost(OAIPsm oai_psm);
+    virtual void psmPost(OAIPersonalSafetyMessage oai_personal_safety_message);
     
 
 };

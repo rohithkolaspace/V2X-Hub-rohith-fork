@@ -20,16 +20,20 @@ PedestrianPluginHandler::PedestrianPluginHandler() : OpenAPI::OAIDefaultApiHandl
 }
 
 
-void PedestrianPluginHandler::psmPost(OpenAPI::OAIPsm oai_psm) {
-	psmXML = oai_psm.asJson().toStdString();
-	
+void PedestrianPluginHandler::psmPost(OpenAPI::OAIPersonalSafetyMessage oai_personal_safety_message) {
+	QString test = oai_personal_safety_message.asJson();
+	qDebug() << "psmXML: " << test;
+
 	auto reqObj = qobject_cast<OpenAPI::OAIDefaultApiRequest *>(sender());
 	if (reqObj != nullptr)
 	{	
-		//get raw socket and set psm xml
 		reqObj->psmPostResponse();
 	}
 
+}
+
+void PedestrianPluginHandler::setPsmXML(std::string psm) {
+	psmXML = psm;
 }
 
 std::string PedestrianPluginHandler::getPsmXML() {

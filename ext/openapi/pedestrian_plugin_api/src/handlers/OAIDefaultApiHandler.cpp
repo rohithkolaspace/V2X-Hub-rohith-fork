@@ -28,8 +28,8 @@ OAIDefaultApiHandler::~OAIDefaultApiHandler(){
 
 }
 
-void OAIDefaultApiHandler::psmPost(OAIPsm oai_psm) {
-    Q_UNUSED(oai_psm);
+void OAIDefaultApiHandler::psmPost(OAIPersonalSafetyMessage oai_personal_safety_message) {
+    Q_UNUSED(oai_personal_safety_message);
     auto reqObj = qobject_cast<OAIDefaultApiRequest*>(sender());
     if( reqObj != nullptr )
     {

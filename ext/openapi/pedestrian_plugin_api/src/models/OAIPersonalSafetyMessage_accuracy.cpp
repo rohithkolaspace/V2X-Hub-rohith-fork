@@ -9,7 +9,7 @@
  * Do not edit the class manually.
  */
 
-#include "OAIAll_vals_accuracy.h"
+#include "OAIPersonalSafetyMessage_accuracy.h"
 
 #include <QDebug>
 #include <QJsonArray>
@@ -20,18 +20,18 @@
 
 namespace OpenAPI {
 
-OAIAll_vals_accuracy::OAIAll_vals_accuracy(QString json) {
+OAIPersonalSafetyMessage_accuracy::OAIPersonalSafetyMessage_accuracy(QString json) {
     this->initializeModel();
     this->fromJson(json);
 }
 
-OAIAll_vals_accuracy::OAIAll_vals_accuracy() {
+OAIPersonalSafetyMessage_accuracy::OAIPersonalSafetyMessage_accuracy() {
     this->initializeModel();
 }
 
-OAIAll_vals_accuracy::~OAIAll_vals_accuracy() {}
+OAIPersonalSafetyMessage_accuracy::~OAIPersonalSafetyMessage_accuracy() {}
 
-void OAIAll_vals_accuracy::initializeModel() {
+void OAIPersonalSafetyMessage_accuracy::initializeModel() {
 
     m_semi_major_isSet = false;
     m_semi_major_isValid = false;
@@ -43,14 +43,14 @@ void OAIAll_vals_accuracy::initializeModel() {
     m_orientation_isValid = false;
 }
 
-void OAIAll_vals_accuracy::fromJson(QString jsonString) {
+void OAIPersonalSafetyMessage_accuracy::fromJson(QString jsonString) {
     QByteArray array(jsonString.toStdString().c_str());
     QJsonDocument doc = QJsonDocument::fromJson(array);
     QJsonObject jsonObject = doc.object();
     this->fromJsonObject(jsonObject);
 }
 
-void OAIAll_vals_accuracy::fromJsonObject(QJsonObject json) {
+void OAIPersonalSafetyMessage_accuracy::fromJsonObject(QJsonObject json) {
 
     m_semi_major_isValid = ::OpenAPI::fromJsonValue(semi_major, json[QString("semiMajor")]);
     m_semi_major_isSet = !json[QString("semiMajor")].isNull() && m_semi_major_isValid;
@@ -62,14 +62,14 @@ void OAIAll_vals_accuracy::fromJsonObject(QJsonObject json) {
     m_orientation_isSet = !json[QString("orientation")].isNull() && m_orientation_isValid;
 }
 
-QString OAIAll_vals_accuracy::asJson() const {
+QString OAIPersonalSafetyMessage_accuracy::asJson() const {
     QJsonObject obj = this->asJsonObject();
     QJsonDocument doc(obj);
     QByteArray bytes = doc.toJson();
     return QString(bytes);
 }
 
-QJsonObject OAIAll_vals_accuracy::asJsonObject() const {
+QJsonObject OAIPersonalSafetyMessage_accuracy::asJsonObject() const {
     QJsonObject obj;
     if (m_semi_major_isSet) {
         obj.insert(QString("semiMajor"), ::OpenAPI::toJsonValue(semi_major));
@@ -83,55 +83,55 @@ QJsonObject OAIAll_vals_accuracy::asJsonObject() const {
     return obj;
 }
 
-double OAIAll_vals_accuracy::getSemiMajor() const {
+double OAIPersonalSafetyMessage_accuracy::getSemiMajor() const {
     return semi_major;
 }
-void OAIAll_vals_accuracy::setSemiMajor(const double &semi_major) {
+void OAIPersonalSafetyMessage_accuracy::setSemiMajor(const double &semi_major) {
     this->semi_major = semi_major;
     this->m_semi_major_isSet = true;
 }
 
-bool OAIAll_vals_accuracy::is_semi_major_Set() const{
+bool OAIPersonalSafetyMessage_accuracy::is_semi_major_Set() const{
     return m_semi_major_isSet;
 }
 
-bool OAIAll_vals_accuracy::is_semi_major_Valid() const{
+bool OAIPersonalSafetyMessage_accuracy::is_semi_major_Valid() const{
     return m_semi_major_isValid;
 }
 
-double OAIAll_vals_accuracy::getSemiMinor() const {
+double OAIPersonalSafetyMessage_accuracy::getSemiMinor() const {
     return semi_minor;
 }
-void OAIAll_vals_accuracy::setSemiMinor(const double &semi_minor) {
+void OAIPersonalSafetyMessage_accuracy::setSemiMinor(const double &semi_minor) {
     this->semi_minor = semi_minor;
     this->m_semi_minor_isSet = true;
 }
 
-bool OAIAll_vals_accuracy::is_semi_minor_Set() const{
+bool OAIPersonalSafetyMessage_accuracy::is_semi_minor_Set() const{
     return m_semi_minor_isSet;
 }
 
-bool OAIAll_vals_accuracy::is_semi_minor_Valid() const{
+bool OAIPersonalSafetyMessage_accuracy::is_semi_minor_Valid() const{
     return m_semi_minor_isValid;
 }
 
-double OAIAll_vals_accuracy::getOrientation() const {
+double OAIPersonalSafetyMessage_accuracy::getOrientation() const {
     return orientation;
 }
-void OAIAll_vals_accuracy::setOrientation(const double &orientation) {
+void OAIPersonalSafetyMessage_accuracy::setOrientation(const double &orientation) {
     this->orientation = orientation;
     this->m_orientation_isSet = true;
 }
 
-bool OAIAll_vals_accuracy::is_orientation_Set() const{
+bool OAIPersonalSafetyMessage_accuracy::is_orientation_Set() const{
     return m_orientation_isSet;
 }
 
-bool OAIAll_vals_accuracy::is_orientation_Valid() const{
+bool OAIPersonalSafetyMessage_accuracy::is_orientation_Valid() const{
     return m_orientation_isValid;
 }
 
-bool OAIAll_vals_accuracy::isSet() const {
+bool OAIPersonalSafetyMessage_accuracy::isSet() const {
     bool isObjectUpdated = false;
     do {
         if (m_semi_major_isSet) {
@@ -152,7 +152,7 @@ bool OAIAll_vals_accuracy::isSet() const {
     return isObjectUpdated;
 }
 
-bool OAIAll_vals_accuracy::isValid() const {
+bool OAIPersonalSafetyMessage_accuracy::isValid() const {
     // only required properties are required for the object to be considered valid
     return m_semi_major_isValid && m_semi_minor_isValid && m_orientation_isValid && true;
 }

@@ -10,13 +10,13 @@
  */
 
 /*
- * OAIAll_vals_position.h
+ * OAIPersonalSafetyMessage_position.h
  *
  * 
  */
 
-#ifndef OAIAll_vals_position_H
-#define OAIAll_vals_position_H
+#ifndef OAIPersonalSafetyMessage_position_H
+#define OAIPersonalSafetyMessage_position_H
 
 #include <QJsonObject>
 
@@ -26,11 +26,11 @@
 
 namespace OpenAPI {
 
-class OAIAll_vals_position : public OAIObject {
+class OAIPersonalSafetyMessage_position : public OAIObject {
 public:
-    OAIAll_vals_position();
-    OAIAll_vals_position(QString json);
-    ~OAIAll_vals_position() override;
+    OAIPersonalSafetyMessage_position();
+    OAIPersonalSafetyMessage_position(QString json);
+    ~OAIPersonalSafetyMessage_position() override;
 
     QString asJson() const override;
     QJsonObject asJsonObject() const override;
@@ -73,6 +73,6 @@ private:
 
 } // namespace OpenAPI
 
-Q_DECLARE_METATYPE(OpenAPI::OAIAll_vals_position)
+Q_DECLARE_METATYPE(OpenAPI::OAIPersonalSafetyMessage_position)
 
-#endif // OAIAll_vals_position_H
+#endif // OAIPersonalSafetyMessage_position_H
