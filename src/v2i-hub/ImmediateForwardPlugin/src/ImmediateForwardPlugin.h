@@ -15,6 +15,7 @@
 #include <vector>
 #include "PluginClient.h"
 #include "UdpClient.h"
+#include "SNMPClient.h"
 
 #include <boost/chrono.hpp>
 #include <FrequencyThrottle.h>
@@ -62,10 +63,13 @@ private:
 	std::array<svr_list, 4> _udpClientList;
 	std::vector<MessageConfig> _messageConfigMap;
 	std::map<std::string, int> _messageCountMap;
-	std::string signatureData; 
-	std::string url; 
-	std::string baseurl; 
-	unsigned int signState; 
+	std::string signatureData;
+	std::string url;
+	std::string baseurl;
+	std::string _securityUser;
+    std::string _authPassPhrase;
+	unsigned int signState;
+	unsigned int snmpState;
 
 	// Thread safe bool set to true the first time the configuration has been read.
 	std::atomic<bool> _configRead;
@@ -77,6 +81,12 @@ private:
 
 	bool _muteDsrc;
 	// @SONAR_START@
+
+protected:
+	void sendSNMP();
+        /**
+         * @brief Send SNMP request to RSU to transmit forwarded message
+         */
 
 };
 

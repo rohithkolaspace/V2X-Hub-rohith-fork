@@ -129,6 +129,10 @@ void ImmediateForwardPlugin::UpdateConfigSettings()
 		SetStatus<uint>(Key_SkippedInvalidUdpClient, _skippedInvalidUdpClient);
 		SetStatus<uint>(Key_SkippedSignError, _skippedSignErrorResponse);
 
+		GetConfigValue<unsigned int>("EnableSNMP", snmpState, &_mutexUdpClient);
+		GetConfigValue<string>("SecurityUser", _securityUser);
+		GetConfigValue<string>("AuthPassPhrase", _authPassPhrase);
+
 	}
 	for (uint i = 0; i < _udpClientList.size(); i++)
 	{
@@ -139,7 +143,7 @@ void ImmediateForwardPlugin::UpdateConfigSettings()
 	// The same mutex is used that protects the UDP clients.
 	GetConfigValue<unsigned int>("signMessage", signState, &_mutexUdpClient);
 	GetConfigValue<string>("HSMurl",baseurl, &_mutexUdpClient);
-	std::string request="sign";
+	string request="sign";
 	url=baseurl+request;
 
 	GetConfigValue("MuteDsrcRadio", _muteDsrc);
@@ -194,10 +198,19 @@ bool ImmediateForwardPlugin::UpdateUdpClientFromConfigSettings(uint clientIndex)
 				boost::split(addr, srvs[i], boost::is_any_of(":"));
 				if (addr.size() != 2)
 					continue;
-
-				PLOG(logINFO) << "Creating UDP Client " << (clientIndex + 1) <<
-						" - Radio IP: " << addr[0] << ", Port: " << addr[1];
-				_udpClientList[clientIndex].push_back(new UdpClient(addr[0], ::atoi(addr[1].c_str())));
+				if (snmpState == 1)
+				{
+					string _rsuIp = addr[0];
+					string _snmpPort = addr[1];
+					PLOG(logINFO) << "Create SNMP Client to connect to RSU. RSU IP:" << _rsuIp << ",\tRSU Port:" << _snmpPort << ",\tSecurity Name:" << _securityUser << ",\tAuthentication Passphrase: " << _authPassPhrase << endl;
+					auto snmpClient = std::make_shared<SNMPClient>(_rsuIp, _snmpPort, _securityUser, _authPassPhrase);
+				}
+				else
+				{
+					PLOG(logINFO) << "Creating UDP Client " << (clientIndex + 1) <<
+							" - Radio IP: " << addr[0] << ", Port: " << addr[1];
+					_udpClientList[clientIndex].push_back(new UdpClient(addr[0], ::atoi(addr[1].c_str())));
+				}
 			}
 		}
 	}
@@ -402,25 +415,32 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 
 
 
-			// Send the message using the configured UDP client.
-
-			for (uint i = 0; i < _udpClientList[_messageConfigMap[configIndex].ClientIndex].size(); i++)
+			// Send  the message using the configured SNMP client
+			if (signState == 1)
 			{
-				//cout << message << endl;
-
-				if (_udpClientList[_messageConfigMap[configIndex].ClientIndex][i] != NULL)
+				
+			}
+			// Send the message using the configured UDP client.
+			else
+			{
+				for (uint i = 0; i < _udpClientList[_messageConfigMap[configIndex].ClientIndex].size(); i++)
 				{
-					PLOG(logDEBUG2) << _logPrefix << "Sending - TmxType: " << _messageConfigMap[configIndex].TmxType << ", SendType: " << _messageConfigMap[configIndex].SendType
-						<< ", PSID: " << _messageConfigMap[configIndex].Psid << ", Client: " << _messageConfigMap[configIndex].ClientIndex
-						<< ", Channel: " << (_messageConfigMap[configIndex].Channel.empty() ? ::to_string( msg->dsrcMetadata->channel) : _messageConfigMap[configIndex].Channel)
-						<< ", Port: " << _udpClientList[_messageConfigMap[configIndex].ClientIndex][i]->GetPort();
+					//cout << message << endl;
 
-					_udpClientList[_messageConfigMap[configIndex].ClientIndex][i]->Send(message);
-				}
-				else
-				{
-					SetStatus<uint>(Key_SkippedInvalidUdpClient, ++_skippedInvalidUdpClient);
-					PLOG(logWARNING) << "UDP Client Invalid. Cannot send message. TmxType: " << _messageConfigMap[configIndex].TmxType;
+					if (_udpClientList[_messageConfigMap[configIndex].ClientIndex][i] != NULL)
+					{
+						PLOG(logDEBUG2) << _logPrefix << "Sending - TmxType: " << _messageConfigMap[configIndex].TmxType << ", SendType: " << _messageConfigMap[configIndex].SendType
+							<< ", PSID: " << _messageConfigMap[configIndex].Psid << ", Client: " << _messageConfigMap[configIndex].ClientIndex
+							<< ", Channel: " << (_messageConfigMap[configIndex].Channel.empty() ? ::to_string( msg->dsrcMetadata->channel) : _messageConfigMap[configIndex].Channel)
+							<< ", Port: " << _udpClientList[_messageConfigMap[configIndex].ClientIndex][i]->GetPort();
+
+						_udpClientList[_messageConfigMap[configIndex].ClientIndex][i]->Send(message);
+					}
+					else
+					{
+						SetStatus<uint>(Key_SkippedInvalidUdpClient, ++_skippedInvalidUdpClient);
+						PLOG(logWARNING) << "UDP Client Invalid. Cannot send message. TmxType: " << _messageConfigMap[configIndex].TmxType;
+					}
 				}
 			}
 		}

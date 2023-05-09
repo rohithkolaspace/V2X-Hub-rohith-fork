@@ -34,7 +34,7 @@ namespace ERVCloudForwardingPlugin
         {
             // If BSM is not from ERV, print debug log
             PLOG(logDEBUG) << "Incoming BSM is not from Emergency Response Vehicle (ERV)." << endl;
-        }        
+        }
     }
 
     void ERVCloudForwardingPlugin::RegisterRSULocation()

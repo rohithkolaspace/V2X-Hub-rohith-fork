@@ -10,7 +10,14 @@ SNMPClient::SNMPClient(const std::string &rsu_ip, uint16_t snmp_port, const std:
     session.version = SNMP_VERSION_3;
     session.securityName = (char *)securityUser.c_str();
     session.securityNameLen = securityUser.length();
-    session.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV;
+    if (securityUser == "authPrivUser") {
+        session.securityLevel = SNMP_SEC_LEVEL_AUTHPRIV;
+    }
+    else if (securityUser == "authOnlyUser") {
+        session.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV;
+    }
+    
+    else session.securityLevel = SNMP_SEC_LEVEL_NOAUTH;
     session.securityAuthProto = snmp_duplicate_objid(usmHMACSHA1AuthProtocol, USM_AUTH_PROTO_SHA_LEN);
     session.securityAuthProtoLen = USM_AUTH_PROTO_SHA_LEN;
     session.securityAuthKeyLen = USM_AUTH_KU_LEN;
