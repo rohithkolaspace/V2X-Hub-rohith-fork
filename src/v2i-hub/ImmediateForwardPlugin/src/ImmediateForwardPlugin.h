@@ -61,6 +61,7 @@ private:
 	std::mutex _mutexUdpClient;
 	typedef std::vector<tmx::utils::UdpClient *> svr_list;
 	std::array<svr_list, 4> _udpClientList;
+	std::shared_ptr<SNMPClient> _snmpClient;
 	std::vector<MessageConfig> _messageConfigMap;
 	std::map<std::string, int> _messageCountMap;
 	std::string signatureData;

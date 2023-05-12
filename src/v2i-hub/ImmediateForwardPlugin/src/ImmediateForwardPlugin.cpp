@@ -202,8 +202,9 @@ bool ImmediateForwardPlugin::UpdateUdpClientFromConfigSettings(uint clientIndex)
 				{
 					string _rsuIp = addr[0];
 					string _snmpPort = addr[1];
-					PLOG(logINFO) << "Create SNMP Client to connect to RSU. RSU IP:" << _rsuIp << ",\tRSU Port:" << _snmpPort << ",\tSecurity Name:" << _securityUser << ",\tAuthentication Passphrase: " << _authPassPhrase << endl;
-					auto snmpClient = std::make_shared<SNMPClient>(_rsuIp, _snmpPort, _securityUser, _authPassPhrase);
+					PLOG(logINFO) << "Create SNMP Client to connect to RSU. RSU IP:" << _rsuIp << ",\tRSU Port:" << _snmpPort <<
+							",\tSecurity Name:" << _securityUser << ",\tAuthentication Passphrase: " << _authPassPhrase << endl;
+					_snmpClient = std::make_shared<SNMPClient>(_rsuIp, _snmpPort, _securityUser, _authPassPhrase);
 				}
 				else
 				{
@@ -416,10 +417,15 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 
 
 			// Send  the message using the configured SNMP client
-			if (signState == 1)
+			if (snmpState == 1)
 			{
-				
+				PLOG(logDEBUG2) << _logPrefix << "Sending - TmxType: " << _messageConfigMap[configIndex].TmxType << ", SendType: " << _messageConfigMap[configIndex].SendType
+							<< ", PSID: " << _messageConfigMap[configIndex].Psid << ", Client: " << _messageConfigMap[configIndex].ClientIndex
+							<< ", Channel: " << (_messageConfigMap[configIndex].Channel.empty() ? ::to_string( msg->dsrcMetadata->channel) : _messageConfigMap[configIndex].Channel)
+							<< ", Port: " << _snmpClient->GetPort();
+				auto gps_sentence = _snmpClient->SNMPSet(message);
 			}
+
 			// Send the message using the configured UDP client.
 			else
 			{
