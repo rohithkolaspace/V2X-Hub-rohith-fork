@@ -23,6 +23,7 @@
 #include <tmx/json/cJSON.h>
 #include <tmx/Security/include/base64.h>
 
+using namespace tmx::utils;
 
 namespace ImmediateForward
 {
@@ -61,13 +62,15 @@ private:
 	std::mutex _mutexUdpClient;
 	typedef std::vector<tmx::utils::UdpClient *> svr_list;
 	std::array<svr_list, 4> _udpClientList;
-	std::shared_ptr<SNMPClient> _snmpClient;
 	std::vector<MessageConfig> _messageConfigMap;
 	std::map<std::string, int> _messageCountMap;
+	std::string _rsuIp;
+	uint16_t _snmpPort;
 	std::string signatureData;
 	std::string url;
 	std::string baseurl;
-	std::string _securityUser;
+	std::string _securityLevel;
+	std::string _snmpUser;
     std::string _authPassPhrase;
 	unsigned int signState;
 	unsigned int snmpState;
@@ -82,13 +85,6 @@ private:
 
 	bool _muteDsrc;
 	// @SONAR_START@
-
-protected:
-	void sendSNMP();
-        /**
-         * @brief Send SNMP request to RSU to transmit forwarded message
-         */
-
 };
 
 } /* namespace ImmediateForward */

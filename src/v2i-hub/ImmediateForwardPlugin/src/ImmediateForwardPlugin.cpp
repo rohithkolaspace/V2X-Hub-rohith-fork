@@ -17,13 +17,11 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/algorithm/hex.hpp>
-#include "UdpClient.h"
 
 using namespace boost::algorithm; 
 using namespace boost::property_tree;
 using namespace std;
 using namespace tmx;
-using namespace tmx::utils;
 
 namespace ImmediateForward
 {
@@ -128,11 +126,6 @@ void ImmediateForwardPlugin::UpdateConfigSettings()
 		SetStatus<uint>(Key_SkippedNoMessageRoute, _skippedNoMessageRoute);
 		SetStatus<uint>(Key_SkippedInvalidUdpClient, _skippedInvalidUdpClient);
 		SetStatus<uint>(Key_SkippedSignError, _skippedSignErrorResponse);
-
-		GetConfigValue<unsigned int>("EnableSNMP", snmpState, &_mutexUdpClient);
-		GetConfigValue<string>("SecurityUser", _securityUser);
-		GetConfigValue<string>("AuthPassPhrase", _authPassPhrase);
-
 	}
 	for (uint i = 0; i < _udpClientList.size(); i++)
 	{
@@ -168,10 +161,14 @@ bool ImmediateForwardPlugin::UpdateUdpClientFromConfigSettings(uint clientIndex)
 	try
 	{
 		string destinations;
-		GetConfigValue(udpPortSetting, destinations);
-
 		string messages;
+		GetConfigValue(udpPortSetting, destinations);
 		GetConfigValue(messagesSetting, messages);
+
+		GetConfigValue<unsigned int>("EnableSNMP", snmpState);
+		GetConfigValue<string>("SecurityLevel", _securityLevel);
+		GetConfigValue<string>("SNMPUser", _snmpUser);
+		GetConfigValue<string>("AuthPassPhrase", _authPassPhrase);
 
 		// Take the lock while shared data is accessed.
 		// A lock_guard will unlock when it goes out of scope (even if an exception occurs).
@@ -200,11 +197,10 @@ bool ImmediateForwardPlugin::UpdateUdpClientFromConfigSettings(uint clientIndex)
 					continue;
 				if (snmpState == 1)
 				{
-					string _rsuIp = addr[0];
-					string _snmpPort = addr[1];
-					PLOG(logINFO) << "Create SNMP Client to connect to RSU. RSU IP:" << _rsuIp << ",\tRSU Port:" << _snmpPort <<
-							",\tSecurity Name:" << _securityUser << ",\tAuthentication Passphrase: " << _authPassPhrase << endl;
-					_snmpClient = std::make_shared<SNMPClient>(_rsuIp, _snmpPort, _securityUser, _authPassPhrase);
+					_rsuIp = addr[0];
+					_snmpPort = stoul(addr[1]);
+					PLOG(logINFO) << "Create SNMP Client to connect to RSU. RSU IP: " << _rsuIp << ",\tRSU Port: " << _snmpPort <<
+							"\tSNMP User: " << _snmpUser << ",\tSecurity Level: " << _securityLevel << ",\tAuthentication Passphrase: " << _authPassPhrase << endl;
 				}
 				else
 				{
@@ -374,8 +370,7 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 					pclose(pipe);
 					SetStatus<uint>(Key_SkippedSignError, ++_skippedSignErrorResponse);
 					PLOG(logERROR) << "Error parsing Messages: " << ex.what();
-					return;
-; 
+					return; 
 				}
 				PLOG(logDEBUG1) << "SCMS Contain response = " << result << std::endl;
 				cJSON *root   = cJSON_Parse(result.c_str());
@@ -401,34 +396,47 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 			}
 			// @SONAR_START@
 
-			os << "Version=0.7" << "\n";
-			os << "Type=" << _messageConfigMap[configIndex].SendType << "\n" << "PSID=" << _messageConfigMap[configIndex].Psid << "\n";
-			if (_messageConfigMap[configIndex].Channel.empty())
-				os << "Priority=7" << "\n" << "TxMode=CONT" << "\n" << "TxChannel=" << msg->dsrcMetadata->channel << "\n";
-			else
-				os << "Priority=7" << "\n" << "TxMode=CONT" << "\n" << "TxChannel=" << _messageConfigMap[configIndex].Channel << "\n";
-			os << "TxInterval=0" << "\n" << "DeliveryStart=\n" << "DeliveryStop=\n";
-			os << "Signature="<< (signState == 1 ? "True" : "False") << "\n" << "Encryption=False\n";
-			os << "Payload=" << payloadbyte << "\n";
 
-			string message = os.str();
-
-
-
-
-			// Send  the message using the configured SNMP client
+			// Send the message using the configured SNMP client
 			if (snmpState == 1)
 			{
-				PLOG(logDEBUG2) << _logPrefix << "Sending - TmxType: " << _messageConfigMap[configIndex].TmxType << ", SendType: " << _messageConfigMap[configIndex].SendType
-							<< ", PSID: " << _messageConfigMap[configIndex].Psid << ", Client: " << _messageConfigMap[configIndex].ClientIndex
-							<< ", Channel: " << (_messageConfigMap[configIndex].Channel.empty() ? ::to_string( msg->dsrcMetadata->channel) : _messageConfigMap[configIndex].Channel)
-							<< ", Port: " << _snmpClient->GetPort();
-				auto gps_sentence = _snmpClient->SNMPSet(message);
+				auto _snmpClient = std::make_shared<SNMPClient>(_rsuIp, _snmpPort, _snmpUser, _securityLevel, _authPassPhrase);
+
+				// os << "1.3.6.1.4.1.1206.4.2.18.4.2.1.2" << " x " << _messageConfigMap[configIndex].Psid;
+				// if (_messageConfigMap[configIndex].Channel.empty()) 
+				// 	os << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.3" << " i " << msg->dsrcMetadata->channel;
+				// else os << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.3" << " i " << _messageConfigMap[configIndex].Channel;
+				// os << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.4" << " i 1" << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.5" << " i 4" << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.6" << " i 7";
+				// if (signState == 1)
+				// 	os << "1.3.6.1.4.1.1206.4.2.18.4.2.1.7" << " b 1100";
+				// else os << "1.3.6.1.4.1.1206.4.2.18.4.2.1.7" << " b 0000";
+				// os << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.8" << " x " << payloadbyte;
+
+				// os << "i 2";
+
+				string message = "i 2";
+				PLOG(logDEBUG2) << _logPrefix << "Sending: " << message
+							<< " to port: " << _snmpClient->GetPort();
+
+				auto snmp_response = _snmpClient->SNMPSet("iso.0.15628.4.1.99.0", message);
+				PLOG(logDEBUG) << "Received response: " << snmp_response;
 			}
 
 			// Send the message using the configured UDP client.
 			else
 			{
+				os << "Version=0.7" << "\n";
+				os << "Type=" << _messageConfigMap[configIndex].SendType << "\n" << "PSID=" << _messageConfigMap[configIndex].Psid << "\n";
+				if (_messageConfigMap[configIndex].Channel.empty())
+					os << "Priority=7" << "\n" << "TxMode=CONT" << "\n" << "TxChannel=" << msg->dsrcMetadata->channel << "\n";
+				else
+					os << "Priority=7" << "\n" << "TxMode=CONT" << "\n" << "TxChannel=" << _messageConfigMap[configIndex].Channel << "\n";
+				os << "TxInterval=0" << "\n" << "DeliveryStart=\n" << "DeliveryStop=\n";
+				os << "Signature="<< (signState == 1 ? "True" : "False") << "\n" << "Encryption=False\n";
+				os << "Payload=" << payloadbyte << "\n";
+
+				string message = os.str();
+
 				for (uint i = 0; i < _udpClientList[_messageConfigMap[configIndex].ClientIndex].size(); i++)
 				{
 					//cout << message << endl;

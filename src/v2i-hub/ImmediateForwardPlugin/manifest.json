@@ -10,7 +10,7 @@
     {
       "key":"LogLevel",
       "default":"INFO",
-      "description":"The log level for this plugin"
+      "description":"The log level for this plugin."
     },
     {
       "key": "Messages_Destination_1",
@@ -75,12 +75,17 @@
     {
       "key":"AuthPassPhrase",
       "default":"dummy",
-      "description":"SNMP v3 authentication passphrase"
+      "description":"SNMP v3 authentication passphrase."
     },
     {
-      "key":"SecurityUser",
-      "default":"authPrivUser",
-      "description":"SNMP Access Control"
+      "key":"SNMPUser",
+      "default":"dummyUser",
+      "description":"SNMP v3 user."
+    },
+    {
+      "key":"SecurityLevel",
+      "default":"authNoPriv",
+      "description":"SNMP Access Control. Usage: noAuthNoPriv, authNoPriv, or authPriv."
     }
     ]
 }

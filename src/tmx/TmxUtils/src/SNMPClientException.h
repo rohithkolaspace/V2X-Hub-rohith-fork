@@ -2,6 +2,8 @@
 #define SNMPCLIENTEXCEPTION_H_
 #include <iostream>
 
+namespace tmx::utils {
+
 class SNMPClientException : public std::exception
 {
 private:
@@ -15,4 +17,7 @@ public:
     }
     ~SNMPClientException() override = default;
 };
-#endif
+
+} // namespace tmx::utils
+
+#endif /* SNMPCLIENTEXCEPTION_H_ */

@@ -48,8 +48,8 @@ namespace ERVCloudForwardingPlugin
             PLOG(logINFO) << "Attempting to register RSU " << attempt << " times." << endl;
             try
             {
-                PLOG(logINFO) << "Create SNMP Client to connect to RSU. RSU IP:" << _rsuIp << ",\tRSU Port:" << _snmpPort << ",\tSecurity Name:" << _securityUser << ",\tAuthentication Passphrase: " << _authPassPhrase << endl;
-                auto snmpClient = std::make_shared<SNMPClient>(_rsuIp, _snmpPort, _securityUser, _authPassPhrase);
+                PLOG(logINFO) << "Create SNMP Client to connect to RSU. RSU IP:" << _rsuIp << ",\tRSU Port:" << _snmpPort << ",\tSecurity Level:" << _securityLevel << "\tSNMP User: " << _snmpUser << ",\tAuthentication Passphrase: " << _authPassPhrase << endl;
+                auto snmpClient = std::make_shared<SNMPClient>(_rsuIp, _snmpPort, _snmpUser, _securityLevel, _authPassPhrase);
                 auto gps_sentence = snmpClient->SNMPGet(_GPSOID);
                 auto gps_map = ERVCloudForwardingWorker::ParseGPS(gps_sentence);
                 long latitude = 0;
@@ -106,7 +106,8 @@ namespace ERVCloudForwardingPlugin
         GetConfigValue<uint16_t>("WebServicePort", _webPort);
         GetConfigValue<string>("RSUIp", _rsuIp);
         GetConfigValue<uint16_t>("SNMPPort", _snmpPort);
-        GetConfigValue<string>("SecurityUser", _securityUser);
+        GetConfigValue<string>("SecurityLevel", _securityLevel);
+        GetConfigValue<string>("SNMPUser", _snmpUser);
         GetConfigValue<string>("AuthPassPhrase", _authPassPhrase);
         GetConfigValue<string>("GPSOID", _GPSOID);
         GetConfigValue<string>("RSUName", _rsuName);
