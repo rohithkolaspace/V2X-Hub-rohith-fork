@@ -10,19 +10,24 @@ services:
       - MYSQL_USER=IVP
       - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
-    network_mode: host
+    networks:
+      spectrum_v2x_net:
+        ipv4_address: 172.1.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
     secrets:
       - mysql_password
       - mysql_root_password
     volumes:
       - ./mysql/localhost.sql:/docker-entrypoint-initdb.d/localhost.sql
-      - ./mysql/port_drayage.sql:/docker-entrypoint-initdb.d/port_drayage.sql
       - mysql-datavolume:/var/lib/mysql
 
   php:
     image: usdotfhwaops/php:k900
     container_name: php
-    network_mode: host
+    network_mode: service:db
     depends_on: 
       - db
       - v2xhub
@@ -32,10 +37,11 @@ services:
   v2xhub:
     image: usdotfhwaops/v2xhubamd:k900
     container_name: v2xhub
-    network_mode: host
+    network_mode: service:db
     restart: always
-    depends_on: 
-      - db
+    depends_on:
+        db:
+            condition: service_healthy
     environment:
       - MYSQL_PASSWORD=/run/secrets/mysql_password
     secrets:
@@ -43,10 +49,499 @@ services:
     volumes:
       - ./logs:/var/log/tmx
       - ./MAP:/var/www/plugins/MAP
-  port_drayage_webservice:
-    image: usdotfhwaops/port-drayage-webservice:k900
-    container_name: port_drayage_webservice
-    network_mode: host
+
+  db2:
+    image: mysql:5.7
+    container_name: mysql2
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IVP
+      - MYSQL_USER=IVP
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    networks:
+      spectrum_v2x_net2:
+        ipv4_address: 172.2.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - ./mysql2/localhost2.sql:/docker-entrypoint-initdb.d/localhost2.sql
+      - mysql-datavolume:/var/lib/mysql2
+
+  php2:
+    image: usdotfhwaops/php:k900
+    container_name: php2
+    network_mode: service:db2
+    depends_on: 
+      - db2
+      - v2xhub2
+    stdin_open: true
+    tty: true
+
+  v2xhub2:
+    image: usdotfhwaops/v2xhubamd:k900
+    container_name: v2xhub2
+    network_mode: service:db2
+    restart: always
+    depends_on:
+        db2:
+            condition: service_healthy
+    environment:
+      - MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_password
+    volumes:
+      - ./logs:/var/log/tmx
+      - ./MAP:/var/www/plugins/MAP
+
+  db3:
+    image: mysql:5.7
+    container_name: mysql3
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IVP
+      - MYSQL_USER=IVP
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    networks:
+      spectrum_v2x_net3:
+        ipv4_address: 172.3.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - ./mysql3/localhost3.sql:/docker-entrypoint-initdb.d/localhost3.sql
+      - mysql-datavolume:/var/lib/mysql3
+
+  php3:
+    image: usdotfhwaops/php:k900
+    container_name: php3
+    network_mode: service:db3
+    depends_on: 
+      - db3
+      - v2xhub3
+    stdin_open: true
+    tty: true
+
+  v2xhub3:
+    image: usdotfhwaops/v2xhubamd:k900
+    container_name: v2xhub3
+    network_mode: service:db3
+    restart: always
+    depends_on:
+        db3:
+            condition: service_healthy
+    environment:
+      - MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_password
+    volumes:
+      - ./logs:/var/log/tmx
+      - ./MAP:/var/www/plugins/MAP
+
+  db4:
+    image: mysql:5.7
+    container_name: mysql4
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IVP
+      - MYSQL_USER=IVP
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    networks:
+      spectrum_v2x_net4:
+        ipv4_address: 172.4.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - ./mysql4/localhost4.sql:/docker-entrypoint-initdb.d/localhost4.sql
+      - mysql-datavolume:/var/lib/mysql4
+
+  php4:
+    image: usdotfhwaops/php:k900
+    container_name: php4
+    network_mode: service:db4
+    depends_on: 
+      - db4
+      - v2xhub4
+    stdin_open: true
+    tty: true
+
+  v2xhub4:
+    image: usdotfhwaops/v2xhubamd:k900
+    container_name: v2xhub4
+    network_mode: service:db4
+    restart: always
+    depends_on:
+        db4:
+            condition: service_healthy
+    environment:
+      - MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_password
+    volumes:
+      - ./logs:/var/log/tmx
+      - ./MAP:/var/www/plugins/MAP
+
+  db5:
+    image: mysql:5.7
+    container_name: mysql5
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IVP
+      - MYSQL_USER=IVP
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    networks:
+      spectrum_v2x_net5:
+        ipv4_address: 172.5.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - ./mysql5/localhost5.sql:/docker-entrypoint-initdb.d/localhost5.sql
+      - mysql-datavolume:/var/lib/mysql5
+
+  php5:
+    image: usdotfhwaops/php:k900
+    container_name: php5
+    network_mode: service:db5
+    depends_on: 
+      - db5
+      - v2xhub5
+    stdin_open: true
+    tty: true
+
+  v2xhub5:
+    image: usdotfhwaops/v2xhubamd:k900
+    container_name: v2xhub5
+    network_mode: service:db5
+    restart: always
+    depends_on:
+        db5:
+            condition: service_healthy
+    environment:
+      - MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_password
+    volumes:
+      - ./logs:/var/log/tmx
+      - ./MAP:/var/www/plugins/MAP
+
+  db6:
+    image: mysql:5.7
+    container_name: mysql6
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IVP
+      - MYSQL_USER=IVP
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    networks:
+      spectrum_v2x_net6:
+        ipv4_address: 172.6.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - ./mysql6/localhost6.sql:/docker-entrypoint-initdb.d/localhost6.sql
+      - mysql-datavolume:/var/lib/mysql6
+
+  php6:
+    image: usdotfhwaops/php:k900
+    container_name: php6
+    network_mode: service:db6
+    depends_on: 
+      - db6
+      - v2xhub6
+    stdin_open: true
+    tty: true
+
+  v2xhub6:
+    image: usdotfhwaops/v2xhubamd:k900
+    container_name: v2xhub6
+    network_mode: service:db6
+    restart: always
+    depends_on:
+        db6:
+            condition: service_healthy
+    environment:
+      - MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_password
+    volumes:
+      - ./logs:/var/log/tmx
+      - ./MAP:/var/www/plugins/MAP
+
+  db7:
+    image: mysql:5.7
+    container_name: mysql7
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IVP
+      - MYSQL_USER=IVP
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    networks:
+      spectrum_v2x_net7:
+        ipv4_address: 172.7.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - ./mysql7/localhost7.sql:/docker-entrypoint-initdb.d/localhost7.sql
+      - mysql-datavolume:/var/lib/mysql7
+
+  php7:
+    image: usdotfhwaops/php:k900
+    container_name: php7
+    network_mode: service:db7
+    depends_on: 
+      - db7
+      - v2xhub7
+    stdin_open: true
+    tty: true
+
+  v2xhub7:
+    image: usdotfhwaops/v2xhubamd:k900
+    container_name: v2xhub7
+    network_mode: service:db7
+    restart: always
+    depends_on:
+        db7:
+            condition: service_healthy
+    environment:
+      - MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_password
+    volumes:
+      - ./logs:/var/log/tmx
+      - ./MAP:/var/www/plugins/MAP
+
+  db8:
+    image: mysql:5.7
+    container_name: mysql8
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IVP
+      - MYSQL_USER=IVP
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    networks:
+      spectrum_v2x_net8:
+        ipv4_address: 172.8.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - ./mysql8/localhost8.sql:/docker-entrypoint-initdb.d/localhost8.sql
+      - mysql-datavolume:/var/lib/mysql8
+
+  php8:
+    image: usdotfhwaops/php:k900
+    container_name: php8
+    network_mode: service:db8
+    depends_on: 
+      - db8
+      - v2xhub8
+    stdin_open: true
+    tty: true
+
+  v2xhub8:
+    image: usdotfhwaops/v2xhubamd:k900
+    container_name: v2xhub8
+    network_mode: service:db8
+    restart: always
+    depends_on:
+        db8:
+            condition: service_healthy
+    environment:
+      - MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_password
+    volumes:
+      - ./logs:/var/log/tmx
+      - ./MAP:/var/www/plugins/MAP
+
+  db9:
+    image: mysql:5.7
+    container_name: mysql9
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IVP
+      - MYSQL_USER=IVP
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    networks:
+      spectrum_v2x_net9:
+        ipv4_address: 172.9.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - ./mysql9/localhost9.sql:/docker-entrypoint-initdb.d/localhost9.sql
+      - mysql-datavolume:/var/lib/mysql9
+
+  php9:
+    image: usdotfhwaops/php:k900
+    container_name: php9
+    network_mode: service:db9
+    depends_on: 
+      - db9
+      - v2xhub9
+    stdin_open: true
+    tty: true
+
+  v2xhub9:
+    image: usdotfhwaops/v2xhubamd:k900
+    container_name: v2xhub9
+    network_mode: service:db9
+    restart: always
+    depends_on:
+        db9:
+            condition: service_healthy
+    environment:
+      - MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_password
+    volumes:
+      - ./logs:/var/log/tmx
+      - ./MAP:/var/www/plugins/MAP
+
+  db10:
+    image: mysql:5.7
+    container_name: mysql10
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IVP
+      - MYSQL_USER=IVP
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    networks:
+      spectrum_v2x_net10:
+        ipv4_address: 172.10.0.2
+    healthcheck:
+        test: out=$$(mysqladmin ping -hlocalhost -P3306 -uIVP --password=$$(cat $${MYSQL_PASSWORD_FILE}) 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+        timeout: 20s
+        retries: 10
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    volumes:
+      - ./mysql10/localhost10.sql:/docker-entrypoint-initdb.d/localhost10.sql
+      - mysql-datavolume:/var/lib/mysql10
+
+  php10:
+    image: usdotfhwaops/php:k900
+    container_name: php10
+    network_mode: service:db10
+    depends_on: 
+      - db10
+      - v2xhub10
+    stdin_open: true
+    tty: true
+
+  v2xhub10:
+    image: usdotfhwaops/v2xhubamd:k900
+    container_name: v2xhub10
+    network_mode: service:db10
+    restart: always
+    depends_on:
+        db10:
+            condition: service_healthy
+    environment:
+      - MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_password
+    volumes:
+      - ./logs:/var/log/tmx
+      - ./MAP:/var/www/plugins/MAP
+
+networks:
+  spectrum_v2x_net:
+    ipam:
+      config:
+        - subnet: 172.1.0.0/16
+        
+  spectrum_v2x_net2:
+    ipam:
+      config:
+        - subnet: 172.2.0.0/16
+
+  spectrum_v2x_net3:
+    ipam:
+      config:
+        - subnet: 172.3.0.0/16
+
+  spectrum_v2x_net4:
+    ipam:
+      config:
+        - subnet: 172.4.0.0/16
+
+  spectrum_v2x_net5:
+    ipam:
+      config:
+        - subnet: 172.5.0.0/16
+
+  spectrum_v2x_net6:
+    ipam:
+      config:
+        - subnet: 172.6.0.0/16
+
+  spectrum_v2x_net7:
+    ipam:
+      config:
+        - subnet: 172.7.0.0/16
+
+  spectrum_v2x_net8:
+    ipam:
+      config:
+        - subnet: 172.8.0.0/16
+
+  spectrum_v2x_net9:
+    ipam:
+      config:
+        - subnet: 172.9.0.0/16
+
+  spectrum_v2x_net10:
+    ipam:
+      config:
+        - subnet: 172.10.0.0/16
+
 secrets:
     mysql_password:
         file: ./secrets/mysql_password.txt
