@@ -16,9 +16,12 @@ namespace unit_test
         std::string snmp_user = "dummy";
         std::string securityLevel = "authPriv";
         std::string authPassPhrase = "dummy"; // Error: passphrase chosen is below the length requirements of the USM (min=8).
-        ASSERT_ANY_THROW(SNMPClient(rsu_ip, snmp_port, snmp_user, securityLevel, authPassPhrase));
+        std::string communityTest = "public"; //remove after test
+        // ASSERT_ANY_THROW(SNMPClient(rsu_ip, snmp_port, snmp_user, securityLevel, authPassPhrase));
+        ASSERT_ANY_THROW(snmp_client(rsu_ip, snmp_port, communityTest, snmp_user, securityLevel, authPassPhrase, 3, 1000));
         authPassPhrase = "dummydummy";
-        ASSERT_NO_THROW(SNMPClient(rsu_ip, snmp_port, snmp_user, securityLevel, authPassPhrase));
+        // ASSERT_NO_THROW(SNMPClient(rsu_ip, snmp_port, snmp_user, securityLevel, authPassPhrase));
+        ASSERT_NO_THROW(snmp_client(rsu_ip, snmp_port, communityTest, snmp_user, securityLevel, authPassPhrase, 3, 1000));
     }
     
     TEST_F(SNMPClientTest, SNMPGet)
@@ -28,7 +31,10 @@ namespace unit_test
         std::string snmp_user = "dummy";
         std::string securityLevel = "authPriv";
         std::string authPassPhrase = "dummydummy";
-        auto snmpClient = SNMPClient(rsu_ip, snmp_port, snmp_user, securityLevel, authPassPhrase);
-        ASSERT_THROW(snmpClient.SNMPGet("1.0.15628.4.1.8.5.0"), SNMPClientException);
+        std::string communityTest = "public"; //remove after test
+        // auto snmpClient = SNMPClient(rsu_ip, snmp_port, snmp_user, securityLevel, authPassPhrase);
+        auto snmpClient = snmp_client(rsu_ip, snmp_port, communityTest, snmp_user, securityLevel, authPassPhrase, 3, 1000);
+        // ASSERT_THROW(snmpClient.SNMPGet("1.0.15628.4.1.8.5.0"), SNMPClientException);
+        ASSERT_THROW(snmpClient.SNMPGet("1.0.15628.4.1.8.5.0"), snmp_client_exception);
     }
 }

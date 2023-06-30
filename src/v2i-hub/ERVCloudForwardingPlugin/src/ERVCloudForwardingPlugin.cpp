@@ -49,8 +49,11 @@ namespace ERVCloudForwardingPlugin
             try
             {
                 PLOG(logINFO) << "Create SNMP Client to connect to RSU. RSU IP:" << _rsuIp << ",\tRSU Port:" << _snmpPort << ",\tSecurity Level:" << _securityLevel << "\tSNMP User: " << _snmpUser << ",\tAuthentication Passphrase: " << _authPassPhrase << endl;
-                auto snmpClient = std::make_shared<SNMPClient>(_rsuIp, _snmpPort, _snmpUser, _securityLevel, _authPassPhrase);
+                // auto snmpClient = std::make_shared<SNMPClient>(_rsuIp, _snmpPort, _snmpUser, _securityLevel, _authPassPhrase);
+                auto snmpClient = std::make_shared<snmp_client>(_rsuIp, _snmpPort, "public", _snmpUser, _securityLevel, _authPassPhrase, 3, 1000);
+                //auto gps_sentence = snmpClient->SNMPGet(_GPSOID);
                 auto gps_sentence = snmpClient->SNMPGet(_GPSOID);
+                //auto gps_sentence = snmpClient->process_snmp_request(_GPSOID, tmx::utils::request_type::GET);
                 auto gps_map = ERVCloudForwardingWorker::ParseGPS(gps_sentence);
                 long latitude = 0;
                 long longitude = 0;
@@ -77,7 +80,8 @@ namespace ERVCloudForwardingPlugin
                 }
                 isRegistered = true;
             }
-            catch (SNMPClientException &ex)
+            // catch (SNMPClientException &ex)
+            catch (snmp_client_exception &ex)
             {
                 PLOG(logERROR) << "Cannot register RSU location. Reason: " << ex.what() << endl;
             }

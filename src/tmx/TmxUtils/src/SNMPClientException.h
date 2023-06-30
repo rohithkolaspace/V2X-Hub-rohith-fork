@@ -1,23 +1,23 @@
-#ifndef SNMPCLIENTEXCEPTION_H_
-#define SNMPCLIENTEXCEPTION_H_
-#include <iostream>
+#pragma once
+
+#include <stdexcept>
 
 namespace tmx::utils {
-
-class SNMPClientException : public std::exception
-{
-private:
-    std::string message;
-
-public:
-    explicit SNMPClientException(const std::string& msg) : message(msg){};
-    const char *what() const noexcept override 
-    {
-        return message.c_str();
-    }
-    ~SNMPClientException() override = default;
-};
-
-} // namespace tmx::utils
-
-#endif /* SNMPCLIENTEXCEPTION_H_ */
+    /**
+     * @brief Runtime error related to SNMP client used to communicate with Traffic Signal Controller (NTCIP).
+     * 
+     * @author Paul Bourelly 
+     */ 
+    class snmp_client_exception : public std::runtime_error{
+        public:
+            /**
+             * @brief Destructor.
+             */ 
+            ~snmp_client_exception() override;
+            /**
+             * @brief Constructor. 
+             * @param msg String exception message.
+             */  
+            explicit snmp_client_exception(const std::string &msg );
+    };
+}

@@ -11,9 +11,9 @@ done
 # command plugin must always be enabled
 tmxctl --plugin CommandPlugin --enable
 # If in simulation mode, enable SimulationAdapter
-if [ "${SIMULATION_MODE^^}" = "TRUE" ] 
-then
-    echo "Enabling CDASim Adapter for Simulation Integration!"
-    tmxctl --plugin CDASimAdapter --enable
-fi
+# if [ "${SIMULATION_MODE^^}" = "TRUE" ] 
+# then
+#     echo "Enabling CDASim Adapter for Simulation Integration!"
+#     tmxctl --plugin CDASimAdapter --enable
+# fi
 tmxcore

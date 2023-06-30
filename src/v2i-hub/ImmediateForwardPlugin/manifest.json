@@ -74,7 +74,7 @@
     },
     {
       "key":"AuthPassPhrase",
-      "default":"dummy",
+      "default":"dummyPass",
       "description":"SNMP v3 authentication passphrase."
     },
     {
