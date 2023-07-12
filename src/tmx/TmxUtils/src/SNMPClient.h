@@ -67,7 +67,7 @@ class snmp_client
         std::string community_ = "public";
         /* net-snmp version definition: SNMP_VERSION_1:0 SNMP_VERSION_2c:1 SNMP_VERSION_2u:2 SNMP_VERSION_3:3
         https://github.com/net-snmp/net-snmp/blob/master/include/net-snmp/library/snmp.h */
-        int snmp_version_ = 0;
+        int snmp_version_ = 3; // default to 3 since previous versions not compatable currently
         /*Time after which the the snmp request times out*/
         int timeout_ = 10000;
 
@@ -102,9 +102,9 @@ class snmp_client
          *  @param request_type The request type for which the error is being logged (GET/SET).
          *  @param response The snmp_pdu struct */
 
-        std::string SNMPGet(const std::string &oid);
+        std::string SNMPGet(const std::string &oid); // Placeholder until ERVCloudForwarding updated
         
-        virtual int get_port() const;
+        virtual int get_port() const; // Returns the current port (should always be 161 or 162)
 
         void log_error(const int& status, const request_type& request_type, snmp_pdu *response) const;
 
@@ -114,133 +114,3 @@ class snmp_client
 };
 
 } // namespace
-
-
-
-
-
-
-
-
-
-
-// #ifndef SNMPCLIENT_H_
-// #define SNMPCLIENT_H_
-
-// #include <net-snmp/net-snmp-config.h>
-// #include <net-snmp/utilities.h>
-// #include <net-snmp/net-snmp-includes.h>
-// #include <fstream>
-// #include <iostream>
-// #include <sstream>
-// #include <vector>
-// #include "PluginLog.h"
-
-// #include <SNMPClientException.h>
-
-
-// namespace tmx::utils {
-
-
-// enum class RESPONSE_TYPE
-// {
-//     INTEGER,
-//     STRING
-// };
-
-
-// struct snmp_response_obj
-// {
-
-//     int64_t val_int = 0;
-//     std::vector<char> val_string;
-//     RESPONSE_TYPE type;
-
-//     inline bool operator==(const snmp_response_obj &obj2) const
-//     {
-
-//         return val_int == obj2.val_int && val_string == obj2.val_string && type == obj2.type;
-
-//     }
-// };
-
-
-// class SNMPClient
-// {
-// private:
-//     netsnmp_session session;
-//     netsnmp_session *ss;
-
-//     // netsnmp_pdu    *pdu, *response = NULL;
-//     netsnmp_pdu *pdu;
-//     netsnmp_pdu *response;
-
-//     netsnmp_variable_list *vars; // unknown
-
-//     oid anOID[MAX_OID_LEN];
-//     size_t anOID_len = MAX_OID_LEN;
-
-//     int _snmp_port;
-// 	std::string _rsuIP;
-
-
-//     // std::string community_ = "public";
-
-//     // int snmp_version_ = 0;
-
-//     //int timeout_ = 10000;
-
-
-    
-
-// public:
-//     /**
-//      * @brief Construct a new SNMPClient object
-//      * @param ip RSU IP
-//      * @param port SNMP port
-//      */
-
-
-//     SNMPClient(const std::string &rsuIP, uint16_t snmp_port, const std::string &snmp_user, const std::string &securityLevel, const std::string &authPassPhrase);
-//     /**
-//      * @brief Send SNMP v3 Get request to an RSU to retrieve data
-//      * @param oid  OID (Object Identifier) uniquely identify managed objects in a MIB database. Concept refers to: https://en.wikipedia.org/wiki/Management_information_base
-//      * @return std::string identified by the oid. If SNMP response is not string, exit with failure.
-//      */
-
-
-//     std::string SNMPGet(const std::string &oid);
-//     /**
-//      * @brief Send SNMP v3 Set request to an RSU to write data
-//      * @param oid OID (Object Identifier) uniquely identify managed objects in a MIB database.
-//      * @return std::string identified by the oid. If SNMP response is not string, exit with failure.
-//      */
-
-
-//     bool SNMPSet(const std::string &oid, snmp_response_obj &val);
-
-//     // bool SNMPSet(const std::string &oid, int32_t value);
-//     // bool SNMPSet(const std::string &oid, u_char type, const void *value, size_t len);
-//     /** 
-//      * @brief Retrieve the port used by this SNMP client as an integer.
-//      * @return The port as expected in a host integer.
-//      */
-
-
-//     virtual int GetPort() const;
-//     /** 
-//      * @brief Retrieve a copy of the RSU IPv4 address.
-//      * @return std::string with a copy of the constructor input address.
-//      */
-
-
-
-// 	virtual std::string GetAddress() const;
-
-
-//     ~SNMPClient();
-// };
-
-// } // namespace tmx::utils
-
-// #endif /* SNMPCLIENT_H_ */

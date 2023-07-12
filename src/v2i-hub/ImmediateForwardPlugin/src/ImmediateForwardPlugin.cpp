@@ -34,7 +34,7 @@ const char* Key_SkippedNoMessageRoute = "Messages Skipped (No route)";
 const char* Key_SkippedSignError = "Message Skipped (Signature Error Response)";
 const char* Key_SkippedInvalidUdpClient = "Messages Skipped (Invalid UDP Client)";
 
-// no change
+
 ImmediateForwardPlugin::ImmediateForwardPlugin(std::string name) : PluginClient(name),
 	_configRead(false),
 	_skippedNoDsrcMetadata(0),
@@ -48,7 +48,6 @@ ImmediateForwardPlugin::ImmediateForwardPlugin(std::string name) : PluginClient(
 	_muteDsrc = false;
 }
 
-// (reuse mutex) SNMPClientList (done?)
 ImmediateForwardPlugin::~ImmediateForwardPlugin()
 {
 	lock_guard<mutex> lock(_mutexUdpClient);
@@ -75,7 +74,7 @@ ImmediateForwardPlugin::~ImmediateForwardPlugin()
 
 // @SONAR_START@
 
-// no change
+
 void ImmediateForwardPlugin::OnConfigChanged(const char *key, const char *value)
 {
 	PluginClient::OnConfigChanged(key, value);
@@ -83,7 +82,7 @@ void ImmediateForwardPlugin::OnConfigChanged(const char *key, const char *value)
 	UpdateConfigSettings();
 }
 
-// no change
+
 void ImmediateForwardPlugin::OnMessageReceived(IvpMessage *msg)
 {
 	// Uncomment this line to call the base method, which prints the message received to cout.
@@ -112,7 +111,7 @@ void ImmediateForwardPlugin::OnMessageReceived(IvpMessage *msg)
 	}
 }
 
-// no change
+
 void ImmediateForwardPlugin::OnStateChange(IvpPluginState state)
 {
 	PluginClient::OnStateChange(state);
@@ -145,7 +144,7 @@ void ImmediateForwardPlugin::UpdateConfigSettings()
 	}
 
 	PLOG(logINFO) << "Updating client lists";
-	if(snmpState == 1){ //updates
+	if(snmpState == 1){ 
 		for (uint i = 0; i < _SNMPClientList.size(); i++)
 		{
 			UpdateUdpClientFromConfigSettings(i);
@@ -220,13 +219,13 @@ bool ImmediateForwardPlugin::UpdateUdpClientFromConfigSettings(uint clientIndex)
 
 		ParseJsonMessageConfig(messages, clientIndex);
 
-		// only check snmp if enabled?
+
 		for (uint i = 0; i < _udpClientList[clientIndex].size(); i++)
 		{
 			if (_udpClientList[clientIndex][i] != NULL)
 				delete _udpClientList[clientIndex][i];
 		}
-		for (uint i = 0; i < _SNMPClientList[clientIndex].size(); i++) // updated
+		for (uint i = 0; i < _SNMPClientList[clientIndex].size(); i++)
 		{
 			if (_SNMPClientList[clientIndex][i] != NULL)
 				delete _SNMPClientList[clientIndex][i];
@@ -234,7 +233,7 @@ bool ImmediateForwardPlugin::UpdateUdpClientFromConfigSettings(uint clientIndex)
 
 		
 		_udpClientList[clientIndex].clear();
-		_SNMPClientList[clientIndex].clear(); // updated
+		_SNMPClientList[clientIndex].clear();
 
 
 		if (destinations.length() > 0)
@@ -256,7 +255,7 @@ bool ImmediateForwardPlugin::UpdateUdpClientFromConfigSettings(uint clientIndex)
 					PLOG(logINFO) << "Create SNMP Client to connect to RSU. RSU IP: " << _rsuIp << ",\tRSU Port: " << _snmpPort <<
 							"\tSNMP User: " << _snmpUser << ",\tSecurity Level: " << _securityLevel << ",\tAuthentication Passphrase: " << _authPassPhrase << endl;
 					// update SNMPClientList with the creation of a new SNMPClient with given params
-					_SNMPClientList[clientIndex].push_back(new snmp_client(_rsuIp, _snmpPort, "public", _snmpUser, _securityLevel, _authPassPhrase, 3, 1000)); // updated
+					_SNMPClientList[clientIndex].push_back(new snmp_client(_rsuIp, _snmpPort, "public", _snmpUser, _securityLevel, _authPassPhrase, 3, 10000)); // updated
 					PLOG(logDEBUG) << "Client added to list";
 				}
 				else
@@ -277,7 +276,6 @@ bool ImmediateForwardPlugin::UpdateUdpClientFromConfigSettings(uint clientIndex)
 	return true;
 }
 
-// no change
 bool ImmediateForwardPlugin::ParseJsonMessageConfig(const std::string& json, uint clientIndex)
 {
 	if (json.length() == 0)
@@ -345,7 +343,6 @@ bool ImmediateForwardPlugin::ParseJsonMessageConfig(const std::string& json, uin
 	return true;
 }
 
-// No change to payload code? 
 void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 {
 	bool foundMessageType = false;
@@ -458,25 +455,14 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 			// Send the message using the configured SNMP clients
 			if (snmpState == 1)
 			{
-				// os << "1.3.6.1.4.1.1206.4.2.18.4.2.1.2" << " x " << _messageConfigMap[configIndex].Psid;
-				// if (_messageConfigMap[configIndex].Channel.empty()) 
-				// 	os << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.3" << " i " << msg->dsrcMetadata->channel;
-				// else os << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.3" << " i " << _messageConfigMap[configIndex].Channel;
-				// os << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.4" << " i 1" << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.5" << " i 4" << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.6" << " i 7";
-				// if (signState == 1)
-				// 	os << "1.3.6.1.4.1.1206.4.2.18.4.2.1.7" << " b 1100";
-				// else os << "1.3.6.1.4.1.1206.4.2.18.4.2.1.7" << " b 0000";
-				// os << " 1.3.6.1.4.1.1206.4.2.18.4.2.1.8" << " x " << payloadbyte;
-				// string message = os.str();
-
-				// Test for single snmp client instance
-
-				_SNMPClientList[0].push_back(new snmp_client(_rsuIp, _snmpPort, "public", _snmpUser, _securityLevel, _authPassPhrase, 3, 1000));
-				PLOG(logINFO) << "Test SNMP client pushed to list";
-
 				auto request = tmx::utils::request_type::SET;
 				auto type_INT = tmx::utils::snmp_response_obj::response_type::INTEGER;
 				auto type_STR = tmx::utils::snmp_response_obj::response_type::STRING;
+
+				auto snmpRsuMode = snmp_client(_rsuIp, _snmpPort, "public", _snmpUser, _securityLevel, _authPassPhrase, 3, 10000);
+				tmx::utils::snmp_response_obj modeMessage;
+				modeMessage.type = type_INT;
+				modeMessage.val_int = 2;
 
 
 				for(int i = 0; i < _SNMPClientList[_messageConfigMap[configIndex].ClientIndex].size(); i++){
@@ -487,12 +473,9 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 					if(_SNMPClientList[_messageConfigMap[configIndex].ClientIndex][i] != NULL){
 
 						// Initial set to enable standby mode on a given RSU
-						tmx::utils::snmp_response_obj modeMessage;
-						modeMessage.type = type_INT; // may create shorthand for INTEGER/STRING
-						modeMessage.val_int = 2;
-						_SNMPClientList[_messageConfigMap[configIndex].ClientIndex][i]->process_snmp_request("iso.0.15628.4.1.99.0", request, modeMessage);
+						// snmpRsuMode->process_snmp_request("iso.0.15628.4.1.99.0", request, modeMessage);
 
-						// tmxtype and sendtype needed?
+						// Some of this will change with NTCIP
 						PLOG(logDEBUG2) << _logPrefix << "Sending - TmxType: " << _messageConfigMap[configIndex].TmxType << ", SendType: " << _messageConfigMap[configIndex].SendType
 							<< ", PSID: " << _messageConfigMap[configIndex].Psid << ", Client: " << _messageConfigMap[configIndex].ClientIndex
 							<< ", Channel: " << (_messageConfigMap[configIndex].Channel.empty() ? ::to_string( msg->dsrcMetadata->channel) : _messageConfigMap[configIndex].Channel)
@@ -503,12 +486,7 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 						maxIFMs.type = type_INT;
 						_SNMPClientList[_messageConfigMap[configIndex].ClientIndex][i]->process_snmp_request("1.3.6.1.4.1.1206.4.2.18.4.1", tmx::utils::request_type::GET, maxIFMs);
 
-						// Loop through each client's immedate forward table until max objs reached (or NULL)
-							// How to iterate through the forward table?
-						// for(int j = 0; i < maxIFMs.val_int; i++){
-
-						// }
-
+						// The following commands are reflective of NTCIP spec, NOT the current spec.
 						tmx::utils::snmp_response_obj msgEnableObj;
 						msgEnableObj.type = type_INT;
 						msgEnableObj.val_int = 1; // should always be set to enable
@@ -524,8 +502,6 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 						std::vector<char> psidVector(_messageConfigMap[configIndex].Psid.begin(), _messageConfigMap[configIndex].Psid.end());
 						psidObj.val_string = psidVector;
 						_SNMPClientList[_messageConfigMap[configIndex].ClientIndex][i]->process_snmp_request("1.3.6.1.4.1.1206.4.2.18.4.2.1.2", request, psidObj);
-
-						// dsrc message id - int32
 
 						tmx::utils::snmp_response_obj channelObj;
 						channelObj.type = type_INT;
@@ -543,6 +519,8 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 						payloadObj.val_string = payloadVector;
 						_SNMPClientList[_messageConfigMap[configIndex].ClientIndex][i]->process_snmp_request("1.3.6.1.4.1.1206.4.2.18.4.2.1.8", request, payloadObj);
 
+						// TBD if needed in the final IFT update, listed for convienence
+						
 						// tmx::utils::snmp_response_obj priorityObj;
 						// priorityObj.type = type_INT;
 						// priorityObj.val_int = 0;
@@ -554,14 +532,14 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 						// _SNMPClientList[_messageConfigMap[configIndex].ClientIndex][i]->process_snmp_request("1.3.6.1.4.1.1206.4.2.18.4.2.1.7", request, optionsObj);
 						
 
-						// DRSC Spec
-						// rsuIFMIndex 			RsuTableIndex
-						// rsuIFMPsid			RsuPsidTC
-						// rsuIFMDsrcMsgId		Int32
-						// rsuIFMTxMode			INT
-						// rsuIFMTxChannel		Int32
-						// rsuIFMEnable			INT
-						// rsuIFMStatus			RowStatus
+						// Current DRSC Spec
+						// rsuIFMIndex		iso.0.15628.4.1.5.1.1 			RsuTableIndex
+						// rsuIFMPsid		iso.0.15628.4.1.5.1.2			RsuPsidTC - string
+						// rsuIFMDsrcMsgId	iso.0.15628.4.1.5.1.3			Int32
+						// rsuIFMTxMode		iso.0.15628.4.1.5.1.4			INT
+						// rsuIFMTxChannel	iso.0.15628.4.1.5.1.5			Int32
+						// rsuIFMEnable		iso.0.15628.4.1.5.1.6			INT
+						// rsuIFMStatus		iso.0.15628.4.1.5.1.7			RowStatus
 
 						// NTCIP Spec
 						// Msg index -	1.3.6.1.4.1.1206.4.2.18.4.2.1.1		RsuTableIndex - int32
@@ -570,7 +548,7 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 						// Msg enable -	1.3.6.1.4.1.1206.4.2.18.4.2.1.4		INTEGER
 						// Status		1.3.6.1.4.1.1206.4.2.18.4.2.1.5		RowStatus
 						// Priority		1.3.6.1.4.1.1206.4.2.18.4.2.1.6		int32
-						// Options 		1.3.6.1.4.1.1206.4.2.18.4.2.1.7		(used to enabled signed or encrypted messages + protocol, 4 bit binary) bits bitset?
+						// Options 		1.3.6.1.4.1.1206.4.2.18.4.2.1.7		(used to enabled signed or encrypted messages + protocol, 4 bit binary)
 						// Payload - 	1.3.6.1.4.1.1206.4.2.18.4.2.1.8		octet string
 
 					}
@@ -579,12 +557,6 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 					}
 
 				}
-
-				// PLOG(logDEBUG2) << _logPrefix << "Sending: " << asnMessage
-				// 			<< " to port: " << _snmpClient->GetPort();
-
-				// auto snmp_response = _snmpClient->SNMPSet("iso.0.15628.4.1.99.0", asnMessage);
-
 			}
 
 			// Send the message using the configured UDP client.
@@ -632,8 +604,6 @@ void ImmediateForwardPlugin::SendMessageToRadio(IvpMessage *msg)
 		return;
 	}
 
-
 }
-
 
 } /* namespace ImmediateForward */

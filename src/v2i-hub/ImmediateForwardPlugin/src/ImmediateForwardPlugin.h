@@ -64,8 +64,6 @@ private:
 	typedef std::vector<tmx::utils::UdpClient *> svr_list;
 	std::array<svr_list, 4> _udpClientList;
 
-	// Client list for snmp, mutex unnecessary?
-	// std::mutex _mutexSNMPClient;
 	typedef std::vector<tmx::utils::snmp_client *> snmp_list;
 	std::array<snmp_list, 4> _SNMPClientList;
 
